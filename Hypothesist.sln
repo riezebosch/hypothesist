@@ -1,8 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prognosis", "Prognosis\Prognosis.csproj", "{A4589094-0F23-4688-B652-D4DD7ED723DF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hypothesize", "Hypothesize\Hypothesize.csproj", "{A4589094-0F23-4688-B652-D4DD7ED723DF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prognosis.Tests", "Prognosis.Tests\Prognosis.Tests.csproj", "{4C1269E7-7F07-4DB9-B9F9-897EA3EC1B73}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hypothesize.Tests", "Hypothesize.Tests\Hypothesize.Tests.csproj", "{4C1269E7-7F07-4DB9-B9F9-897EA3EC1B73}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

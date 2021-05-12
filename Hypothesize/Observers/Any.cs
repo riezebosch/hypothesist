@@ -5,17 +5,20 @@ using System.Threading;
 using System.Threading.Channels;
 using System.Threading.Tasks;
 
-namespace Prognosis.Theorems
+namespace Hypothesize.Observers
 {
-    internal sealed class Any<T> : ITheorem<T>
+    internal sealed class Any<T> : IObservers
     {
         private readonly Action<T> _theorem;
-        private readonly Channel<T> _messages = Channel.CreateUnbounded<T>();
+        private readonly ChannelReader<T> _reader;
 
-        public Any(Action<T> theorem) => 
+        public Any(Action<T> theorem, ChannelReader<T> reader)
+        {
             _theorem = theorem;
+            _reader = reader;
+        }
 
-        async Task ITheorem.Within(TimeSpan window, CancellationToken token)
+        async Task IObservers.Observe(TimeSpan window, CancellationToken token)
         {
             var exceptions = new List<Exception>();
 
@@ -24,7 +27,7 @@ namespace Prognosis.Theorems
                 using var source = CancellationTokenSource.CreateLinkedTokenSource(token);
                 source.CancelAfter(window);
 
-                await foreach (var message in _messages.Reader.ReadAllAsync(source.Token))
+                await foreach (var message in _reader.ReadAllAsync(source.Token))
                 {
                     try
                     {
@@ -46,8 +49,5 @@ namespace Prognosis.Theorems
                     : new TimeoutException();
             }
         }
-
-        async Task ITheorem<T>.Prove(T item) => 
-            await _messages.Writer.WriteAsync(item);
     }
 }

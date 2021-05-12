@@ -1,15 +1,15 @@
 using System;
 using System.Threading.Tasks;
 
-namespace Prognosis.Tests.Helpers
+namespace Hypothesize.Tests.Helpers
 {
-    internal static class Prove
+    internal static class Test
     {
-        public static async Task Slowly<T>(this ITheorem<T> future, params T[] items)
+        public static async Task Slowly<T>(this IHypothesis<T> future, params T[] items)
         {
             foreach (var item in items)
             {
-                await future.Prove(item);
+                await future.Test(item);
                 await Task.Delay(TimeSpan.FromSeconds(1));
             }
         }
