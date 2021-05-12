@@ -5,4 +5,17 @@
         <LangVersion>latest</LangVersion>
     </PropertyGroup>
 
+    <PropertyGroup>
+        <Authors>Manuel Riezebosch</Authors>
+        <NeutralLanguage>en-US</NeutralLanguage>
+        <AssemblyTitle>Unmockable</AssemblyTitle>
+        <Description>Validate hypothesis on future events.</Description>
+        <PackageReleaseNotes>🤟</PackageReleaseNotes>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+        <PackageTags>test;assert;hypothesis;future;async;asynchronous;event;driven;architecture;eda</PackageTags>
+        <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+        <RepositoryType>git</RepositoryType>
+        <RepositoryUrl>https://github.com/riezebosch/hypothesis.git</RepositoryUrl>
+        <Version>0.0.1</Version>
+    </PropertyGroup>
 </Project>
