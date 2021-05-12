@@ -66,7 +66,7 @@ namespace Hypothesize.Tests.Future
                 .Within(TimeSpan.FromSeconds(2));
 
             Func<Task> act = () => Task.WhenAll(hypothesis.Slowly("a", "a", "a", "a", "b"), hypothesis.Validate());
-            act
+            await act
                 .Should()
                 .ThrowAsync<XunitException>();
         }
@@ -77,9 +77,9 @@ namespace Hypothesize.Tests.Future
             using var tcs = new CancellationTokenSource(TimeSpan.FromSeconds(5));
             var hypothesis = Hypothesize.Future
                 .All<string>(_ => { })
-                .Forever(tcs.Token);
+                .Forever();
 
-            await hypothesis.Validate();
+            await hypothesis.Validate(tcs.Token);
         }
     }
 }

@@ -1,12 +1,10 @@
-using System;
-using System.Threading;
-using System.Threading.Channels;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Hypothesize.Observers
 {
-    internal interface IObserve<T>
+    internal interface IObserve<in T>
     {
-        Task Observe(ChannelReader<T> reader, TimeSpan window, CancellationToken token);
+        Task Observe(IAsyncEnumerable<T> items);
     }
 }

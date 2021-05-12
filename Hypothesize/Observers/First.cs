@@ -1,6 +1,5 @@
 using System;
-using System.Threading;
-using System.Threading.Channels;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Hypothesize.Observers
@@ -12,14 +11,15 @@ namespace Hypothesize.Observers
         public First(Action<T> assert) => 
             _assert = assert;
 
-        async Task IObserve<T>.Observe(ChannelReader<T> reader, TimeSpan window, CancellationToken token)
+        async Task IObserve<T>.Observe(IAsyncEnumerable<T> items)
         {
-            using var cts = CancellationTokenSource.CreateLinkedTokenSource(token);
-            cts.CancelAfter(window);
-            
             try
             {
-                _assert(await reader.ReadAsync(cts.Token));
+                await foreach (var item in items)
+                {
+                    _assert(item);
+                    return;
+                }
             }
             catch (OperationCanceledException)
             {

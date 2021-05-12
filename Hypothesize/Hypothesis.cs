@@ -11,20 +11,18 @@ namespace Hypothesize
         private readonly Channel<T> _channel;
         private readonly IObserve<T> _observer;
         private readonly TimeSpan _window;
-        private readonly CancellationToken _token;
 
-        public Hypothesis(Channel<T> channel, IObserve<T> observer, TimeSpan window, CancellationToken token)
+        public Hypothesis(Channel<T> channel, IObserve<T> observer, TimeSpan window)
         {
             _channel = channel;
             _observer = observer;
             _window = window;
-            _token = token;
         }
 
-        public Task Validate() =>
-            _observer.Observe(_channel.Reader, _window, _token);
+        public Task Validate(CancellationToken token) =>
+            _observer.Observe(_channel.Reader.TimeConstraint(_window, token));
 
-        public async Task Test(T item) =>
-            await _channel.Writer.WriteAsync(item, _token);
+        public async Task Test(T item, CancellationToken token) =>
+            await _channel.Writer.WriteAsync(item, token);
     }
 }

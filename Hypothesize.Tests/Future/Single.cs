@@ -96,9 +96,9 @@ namespace Hypothesize.Tests.Future
             using var tcs = new CancellationTokenSource(TimeSpan.FromSeconds(5));
             var hypothesis = Hypothesize.Future
                 .Single<string>(_ => { })
-                .Forever(tcs.Token);
+                .Forever();
             
-            Func<Task> act = () => hypothesis.Validate();
+            Func<Task> act = () => hypothesis.Validate(tcs.Token);
             await act
                 .Should()
                 .ThrowAsync<TimeoutException>();

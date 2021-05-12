@@ -1,5 +1,4 @@
 using System;
-using System.Threading;
 using System.Threading.Channels;
 using Hypothesize.Observers;
     
@@ -16,10 +15,10 @@ namespace Hypothesize
             _channel = channel;
         }
 
-        public IHypothesis<T> Within(TimeSpan window, CancellationToken token) =>
-            new Hypothesis<T>(_channel, _observer, window, token);
+        public IHypothesis<T> Within(TimeSpan window) =>
+            new Hypothesis<T>(_channel, _observer, window);
         
-        public IHypothesis<T> Forever(CancellationToken token) =>
-            new Hypothesis<T>(_channel, _observer, TimeSpan.FromMilliseconds(-1), token);
+        public IHypothesis<T> Forever() =>
+            new Hypothesis<T>(_channel, _observer, TimeSpan.FromMilliseconds(-1));
     }
 }
