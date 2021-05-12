@@ -1,3 +1,5 @@
+[![nuget](https://img.shields.io/nuget/v/Hypothesize.svg)](https://www.nuget.org/packages/Hypothesize/)
+
 # Hypothesis
 
 > The future assertion library for .NET.
