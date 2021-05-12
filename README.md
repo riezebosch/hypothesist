@@ -51,7 +51,9 @@ Validates that _the first_ item that is observed matches the assertion.
 
 ### Single
 
-Validates that _exactly one_ item is observed and it matches the assertion.
+Validates that _exactly one_ item is observed that matches the assertion.
+
+Remark: having _other_ items _not matching_ the assert means the hypothesis still holds true.
 
 ## Time Constraint
 

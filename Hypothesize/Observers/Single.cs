@@ -18,9 +18,15 @@ namespace Hypothesize.Observers
             {
                 await foreach (var message in items)
                 {
-                    _assert(message);
-                    valid++;
-
+                    try
+                    {
+                        _assert(message);
+                        valid++;
+                    }
+                    catch (Exception)
+                    {
+                    }
+                    
                     if (valid > 1)
                     {
                         throw new InvalidOperationException();

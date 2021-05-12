@@ -21,6 +21,22 @@ namespace Hypothesize.Tests.Future
         }
         
         [Fact]
+        public async Task AllowOthers()
+        {
+            var hypothesis = Hypothesize.Future
+                .Single<string>(x => x.Should().Be("a"))
+                .Within(TimeSpan.FromSeconds(1));
+
+            hypothesis.Test("b");
+            hypothesis.Test("d");
+            hypothesis.Test("a");
+            hypothesis.Test("e");
+            hypothesis.Test("f");
+            
+            await hypothesis.Validate();
+        }
+        
+        [Fact]
         public async Task None()
         {
             var hypothesis = Hypothesize.Future
@@ -45,7 +61,7 @@ namespace Hypothesize.Tests.Future
             Func<Task> act = () => hypothesis.Validate();
             await act
                 .Should()
-                .ThrowAsync<XunitException>();
+                .ThrowAsync<TimeoutException>();
         }
         
         [Fact]
