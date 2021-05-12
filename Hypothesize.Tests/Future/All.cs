@@ -16,6 +16,16 @@ namespace Hypothesize.Tests.Future
                 .All<string>(x => x.Should().Be("a"))
                 .Within(TimeSpan.FromSeconds(1))
                 .Validate();
+        
+        [Fact]
+        public async Task Success()
+        {
+            var hypothesis = Hypothesize.Future
+                .All<string>(x => x.Should().Be("a"))
+                .Within(TimeSpan.FromSeconds(1));
+
+            await Task.WhenAll(hypothesis.Test("a"), hypothesis.Validate());
+        }
 
         [Fact]
         public async Task Throws()
@@ -26,7 +36,8 @@ namespace Hypothesize.Tests.Future
 
             await hypothesis.Test("b");
             
-            await hypothesis.Invoking(x => x.Validate())
+            Func<Task> act = () => hypothesis.Validate();
+            await act
                 .Should()
                 .ThrowAsync<XunitException>();
         }
@@ -41,21 +52,23 @@ namespace Hypothesize.Tests.Future
             await hypothesis.Test("a");
             await hypothesis.Test("b");
 
-            await hypothesis.Invoking(x => x.Validate())
+            Func<Task> act = () => hypothesis.Validate();
+            await act
                 .Should()
                 .ThrowAsync<XunitException>();
         }
         
         [Fact]
-        public async Task Unfortunately()
+        public async Task Sliding()
         {
             var hypothesis = Hypothesize.Future
                 .All<string>(y => y.Should().Be("a"))
                 .Within(TimeSpan.FromSeconds(2));
-            
-            await Task.WhenAll(hypothesis.Slowly("a", "a", "a", "a", "b"), hypothesis.Invoking(x => x.Validate())
+
+            Func<Task> act = () => Task.WhenAll(hypothesis.Slowly("a", "a", "a", "a", "b"), hypothesis.Validate());
+            act
                 .Should()
-                .ThrowAsync<XunitException>());
+                .ThrowAsync<XunitException>();
         }
         
         [Fact]

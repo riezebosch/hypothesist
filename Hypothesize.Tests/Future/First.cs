@@ -2,19 +2,18 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
-using Hypothesize.Tests.Helpers;
 using Xunit;
 using Xunit.Sdk;
 
 namespace Hypothesize.Tests.Future
 {
-    public class Any
+    public class First
     {
         [Fact]
         public async Task Success()
         {
             var hypothesis = Hypothesize.Future
-                .Any<string>(x => x.Should().Be("a"))
+                .First<string>(x => x.Should().Be("a"))
                 .Within(TimeSpan.FromSeconds(1));
 
             await Task.WhenAll(hypothesis.Test("a"), hypothesis.Validate());
@@ -24,7 +23,7 @@ namespace Hypothesize.Tests.Future
         public async Task None()
         {
             var hypothesis = Hypothesize.Future
-                .Any<string>(_ => { })
+                .First<string>(_ => { })
                 .Within(TimeSpan.FromSeconds(1));
 
             Func<Task> act = () => hypothesis.Validate();
@@ -34,23 +33,14 @@ namespace Hypothesize.Tests.Future
         }
         
         [Fact]
-        public async Task Sliding()
-        {
-            var hypothesis = Hypothesize.Future
-                .Any<string>(y => y.Should().Be("b"))
-                .Within(TimeSpan.FromSeconds(2));
-            
-            await Task.WhenAll(hypothesis.Slowly("a", "a", "a", "a", "b"), hypothesis.Validate());
-        }
-        
-        [Fact]
         public async Task Throws()
         {
             var hypothesis = Hypothesize.Future
-                .Any<string>(y => y.Should().Be("a"))
+                .First<string>(y => y.Should().Be("a"))
                 .Within(TimeSpan.FromSeconds(1));
             
             await hypothesis.Test("b");
+            await hypothesis.Test("a");
             
             Func<Task> act = () => hypothesis.Validate();
             await act
@@ -59,44 +49,10 @@ namespace Hypothesize.Tests.Future
         }
         
         [Fact]
-        public async Task Aggregate()
-        {
-            var hypothesis = Hypothesize.Future
-                .Any<string>(y => y.Should().Be("a"))
-                .Within(TimeSpan.FromSeconds(1));
-
-            await hypothesis.Test("b");
-            await hypothesis.Test("c");
-            
-            Func<Task> act = () => hypothesis.Validate();
-            var ex = await act
-                .Should()
-                .ThrowAsync<AggregateException>();
-            
-            ex.Which
-                .InnerExceptions
-                .Should()
-                .HaveCount(2);
-        }
-        
-        [Fact]
-        public async Task Subsequent()
-        {
-            var hypothesis = Hypothesize.Future
-                .Any<string>(y => y.Should().Be("b"))
-                .Within(TimeSpan.FromSeconds(1));
-
-            await hypothesis.Test("a");
-            await hypothesis.Test("b");
-
-            await hypothesis.Validate();
-        }
-        
-        [Fact]
         public async Task Forever()
         {
             var hypothesis = Hypothesize.Future
-                .Any<string>(_ => { })
+                .First<string>(_ => { })
                 .Forever();
 
             var delay = Task.Delay(TimeSpan.FromSeconds(5));
@@ -110,7 +66,7 @@ namespace Hypothesize.Tests.Future
         {
             using var tcs = new CancellationTokenSource(TimeSpan.FromSeconds(5));
             var hypothesis = Hypothesize.Future
-                .Any<string>(_ => { })
+                .First<string>(_ => { })
                 .Forever(tcs.Token);
             
             Func<Task> act = () => hypothesis.Validate();

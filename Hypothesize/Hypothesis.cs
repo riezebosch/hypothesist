@@ -8,23 +8,23 @@ namespace Hypothesize
 {
     internal class Hypothesis<T> : IHypothesis<T>
     {
-        private readonly ChannelWriter<T> _writer;
-        private readonly IObservers _observers;
+        private readonly Channel<T> _channel;
+        private readonly IObserve<T> _observer;
         private readonly TimeSpan _window;
         private readonly CancellationToken _token;
 
-        public Hypothesis(ChannelWriter<T> writer, IObservers observers, TimeSpan window, CancellationToken token)
+        public Hypothesis(Channel<T> channel, IObserve<T> observer, TimeSpan window, CancellationToken token)
         {
-            _writer = writer;
-            _observers = observers;
+            _channel = channel;
+            _observer = observer;
             _window = window;
             _token = token;
         }
 
         public Task Validate() =>
-            _observers.Observe(_window, _token);
+            _observer.Observe(_channel.Reader, _window, _token);
 
         public async Task Test(T item) =>
-            await _writer.WriteAsync(item, _token);
+            await _channel.Writer.WriteAsync(item, _token);
     }
 }
