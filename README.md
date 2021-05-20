@@ -5,7 +5,9 @@
 > The future assertion library for .NET.
 
 This library is there to help you do assertions on events that are about to happen in the near future.
-For example, when building integration tests for a subscriber on an asynchronous service bus.
+For example, when building integration tests for a subscriber on a service bus.
+
+![schema](docs/img/hypothesize.svg)
 
 Define your hypothesis:
 
