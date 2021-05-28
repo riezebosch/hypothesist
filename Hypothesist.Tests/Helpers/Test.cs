@@ -1,11 +1,11 @@
 using System;
 using System.Threading.Tasks;
 
-namespace Hypothesize.Tests.Helpers
+namespace Hypothesist.Tests.Helpers
 {
     internal static class Test
     {
-        public static async Task Slowly<T>(this IHypothesis<T> future, params T[] items)
+        public static async Task TestSlowly<T>(this IHypothesis<T> future, params T[] items)
         {
             foreach (var item in items)
             {

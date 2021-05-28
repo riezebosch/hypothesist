@@ -20,7 +20,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Hypothesize\Hypothesize.csproj" />
+      <ProjectReference Include="..\Hypothesist\Hypothesist.csproj" />
     </ItemGroup>
 
 </Project>

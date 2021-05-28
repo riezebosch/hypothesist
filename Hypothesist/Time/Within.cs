@@ -4,19 +4,24 @@ using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Channels;
 
-namespace Hypothesize
+namespace Hypothesist.Time
 {
-    internal static class Time
+    internal class Within<T> : IConstraint<T>
     {
-        public static async IAsyncEnumerable<T> TimeConstraint<T>(this ChannelReader<T> reader, TimeSpan window, [EnumeratorCancellation] CancellationToken token)
+        private readonly TimeSpan _window;
+
+        public Within(TimeSpan window) => 
+            _window = window;
+
+        async IAsyncEnumerable<T> IConstraint<T>.Read(ChannelReader<T> reader, [EnumeratorCancellation] CancellationToken token)
         {
             using var source = CancellationTokenSource.CreateLinkedTokenSource(token);
-            source.CancelAfter(window);
+            source.CancelAfter(_window);
             
             await foreach (var item in reader.ReadAllAsync(source.Token))
             {
                 yield return item;
-                source.CancelAfter(window);
+                source.CancelAfter(_window);
             }
         }
     }

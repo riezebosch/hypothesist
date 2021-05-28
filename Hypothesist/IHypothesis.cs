@@ -1,7 +1,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Hypothesize
+namespace Hypothesist
 {
     public interface IHypothesis<in T>
     {
