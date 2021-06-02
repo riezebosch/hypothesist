@@ -19,5 +19,8 @@ namespace Hypothesist
 
         public static IStatement<T> Exactly<T>(int occurrences) =>
             new Statement<T>(new Exactly<T>(occurrences));
+
+        public static IStatement<T> AtLeast<T>(int occurrences) =>
+            new Statement<T>(new AtLeast<T>(occurrences));
     }
 }
