@@ -8,8 +8,8 @@ namespace Hypothesist
         public static IStatement<T> Any<T>() => 
             new Statement<T>(new Any<T>());
 
-        public static IStatement<T> All<T>() => 
-            new Statement<T>(new All<T>());
+        public static IStatement<T> Each<T>() => 
+            new Statement<T>(new Each<T>());
         
         public static IStatement<T> First<T>() => 
             new Statement<T>(new First<T>());

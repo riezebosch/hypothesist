@@ -8,23 +8,23 @@ using Xunit;
 
 namespace Hypothesist.Tests.Hypothesis
 {
-    public class All
+    public class Each
     {
         [Fact]
         public async Task Empty() => 
             await Hypothesize
-                .All<string>()
+                .Each<string>()
                 .Within(1.Seconds())
-                .Should(x => x == "a")
+                .Matches(x => x == "a")
                 .Validate();
         
         [Fact]
         public async Task Success()
         {
             var hypothesis = Hypothesize
-                .All<string>()
+                .Each<string>()
                 .Within(1.Seconds())
-                .Should(x => x == "a");
+                .Matches(x => x == "a");
 
             await Task.WhenAll(hypothesis.Test("a"), hypothesis.Validate());
         }
@@ -33,9 +33,9 @@ namespace Hypothesist.Tests.Hypothesis
         public async Task Invalid()
         {
             var hypothesis = Hypothesize
-                .All<string>()
+                .Each<string>()
                 .Forever()
-                .Should(y => y == "a");
+                .Matches(y => y == "a");
 
             await hypothesis.Test("b");
             
@@ -59,9 +59,9 @@ namespace Hypothesist.Tests.Hypothesis
         public async Task Subsequent()
         {
             var hypothesis = Hypothesize
-                .All<string>()
+                .Each<string>()
                 .Within(1.Seconds())
-                .Should(y => y == "a");
+                .Matches(y => y == "a");
             
             await hypothesis.Test("a");
             await hypothesis.Test("b");
@@ -86,9 +86,9 @@ namespace Hypothesist.Tests.Hypothesis
         public async Task Sliding()
         {
             var hypothesis = Hypothesize
-                .All<string>()
+                .Each<string>()
                 .Within(2.Seconds())
-                .Should(y => y == "a");
+                .Matches(y => y == "a");
 
             Func<Task> act = () => Task.WhenAll(hypothesis.TestSlowly("a", "a", "a", "a", "b"), hypothesis.Validate());
             await act
@@ -101,9 +101,9 @@ namespace Hypothesist.Tests.Hypothesis
         {
             using var tcs = new CancellationTokenSource(5.Seconds());
             var hypothesis = Hypothesize
-                .All<string>()
+                .Each<string>()
                 .Forever()
-                .Should(_ => { });
+                .Matches(_ => { });
 
             await hypothesis.Validate(tcs.Token);
         }

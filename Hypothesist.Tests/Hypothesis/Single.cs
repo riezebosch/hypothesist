@@ -15,7 +15,7 @@ namespace Hypothesist.Tests.Hypothesis
             var hypothesis = Hypothesize
                 .Single<string>()
                 .Within(1.Seconds())
-                .Should(x => x.Should().Be("a"));
+                .Matches(x => x.Should().Be("a"));
 
             await Task.WhenAll(hypothesis.Test("a"), hypothesis.Validate());
         }
@@ -26,7 +26,7 @@ namespace Hypothesist.Tests.Hypothesis
             var hypothesis = Hypothesize
                 .Single<string>()
                 .Within(1.Seconds())
-                .Should(x => x.Should().Be("a"));
+                .Matches(x => x.Should().Be("a"));
 
             await Task.WhenAll(hypothesis.Test("b"),
                 hypothesis.Test("d"),
@@ -42,7 +42,7 @@ namespace Hypothesist.Tests.Hypothesis
             var hypothesis = Hypothesize
                 .Single<string>()
                 .Within(1.Seconds())
-                .Should(x => x == "a");
+                .Matches(x => x == "a");
 
             Func<Task> act = () => hypothesis.Validate();
             var ex = await act
@@ -61,7 +61,7 @@ namespace Hypothesist.Tests.Hypothesis
             var hypothesis = Hypothesize
                 .Single<string>()
                 .Within(1.Seconds())
-                .Should(y => y.Should().Be("a"));
+                .Matches(y => y.Should().Be("a"));
             
             await hypothesis.Test("b");
             
@@ -82,7 +82,7 @@ namespace Hypothesist.Tests.Hypothesis
             var hypothesis = Hypothesize
                 .Single<string>()
                 .Within(1.Seconds())
-                .Should(y => y.Should().Be("a"));
+                .Matches(y => y.Should().Be("a"));
             
             
             await hypothesis.Test("a");
@@ -111,7 +111,7 @@ namespace Hypothesist.Tests.Hypothesis
             var hypothesis = Hypothesize
                 .Single<string>()
                 .Within(1.Seconds())
-                .Should(y => y.Should().Be("a"));
+                .Matches(y => y.Should().Be("a"));
                 
             var validate = hypothesis.Validate();
             var first = await Task.WhenAny(hypothesis.TestSlowly("a", "a", "a", "a"), validate);

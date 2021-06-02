@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace Hypothesist.Observers
 {
-    internal sealed class All<T> : IObserve<T>
+    internal sealed class Each<T> : IObserve<T>
     {
         async Task IObserve<T>.Observe(Predicate<T> match, IAsyncEnumerable<T> samples)
         {

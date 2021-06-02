@@ -15,10 +15,10 @@ namespace Hypothesist.Builders
             _constraint = constraint;
         }
 
-        IHypothesis<T> IWindow<T>.Should(Predicate<T> match) =>
+        IHypothesis<T> IWindow<T>.Matches(Predicate<T> match) =>
             new Hypothesis<T>(_observer, _constraint, match);
         
-        IHypothesis<T> IWindow<T>.Should(Action<T> match) =>
+        IHypothesis<T> IWindow<T>.Matches(Action<T> match) =>
             new Hypothesis<T>(_observer, _constraint, x =>
             {
                 try

@@ -14,7 +14,7 @@ namespace Hypothesist.Tests.Hypothesis
             var hypothesis = Hypothesize
                 .First<string>()
                 .Within(1.Seconds())
-                .Should(x => x.Should().Be("a"));
+                .Matches(x => x.Should().Be("a"));
 
             await Task.WhenAll(hypothesis.Test("a"), hypothesis.Validate());
         }
@@ -25,7 +25,7 @@ namespace Hypothesist.Tests.Hypothesis
             var hypothesis = Hypothesize
                 .First<string>()
                 .Within(1.Seconds())
-                .Should(_ => { });
+                .Matches(_ => { });
 
             Func<Task> act = () => hypothesis.Validate();
             await act
@@ -39,7 +39,7 @@ namespace Hypothesist.Tests.Hypothesis
             var hypothesis = Hypothesize
                 .First<string>()
                 .Within(1.Seconds())
-                .Should(y => y.Should().Be("a"));
+                .Matches(y => y.Should().Be("a"));
             
             await hypothesis.Test("b");
             await hypothesis.Test("a");

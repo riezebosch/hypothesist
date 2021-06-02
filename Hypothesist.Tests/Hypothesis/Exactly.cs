@@ -14,7 +14,7 @@ namespace Hypothesist.Tests.Hypothesis
             var hypothesis = Hypothesize
                 .Exactly<string>(2)
                 .Within(1.Seconds())
-                .Should(x => x == "a");
+                .Matches(x => x == "a");
 
             await hypothesis.Test("a");
             await hypothesis.Test("a");
@@ -29,7 +29,7 @@ namespace Hypothesist.Tests.Hypothesis
             var hypothesis = Hypothesize
                 .Exactly<string>(2)
                 .Within(1.Seconds())
-                .Should(x => x == "a");
+                .Matches(x => x == "a");
 
             Func<Task> act = () => hypothesis.Validate();
             await act.Should()
@@ -42,7 +42,7 @@ namespace Hypothesist.Tests.Hypothesis
             var hypothesis = Hypothesize
                 .Exactly<string>(2)
                 .Within(1.Seconds())
-                .Should(x => x == "a");
+                .Matches(x => x == "a");
             
             await hypothesis.Test("a");
             
@@ -62,7 +62,7 @@ namespace Hypothesist.Tests.Hypothesis
             var hypothesis = Hypothesize
                 .Exactly<string>(2)
                 .Within(1.Seconds())
-                .Should(x => x == "a");
+                .Matches(x => x == "a");
             
             await hypothesis.Test("a");
             await hypothesis.Test("a");
@@ -84,7 +84,7 @@ namespace Hypothesist.Tests.Hypothesis
             var hypothesis = Hypothesize
                 .Exactly<string>(2)
                 .Within(1.Seconds())
-                .Should(x => x == "a");
+                .Matches(x => x == "a");
             
             await hypothesis.Test("b");
             

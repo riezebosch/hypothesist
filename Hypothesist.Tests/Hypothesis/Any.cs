@@ -15,7 +15,7 @@ namespace Hypothesist.Tests.Hypothesis
             var hypothesis = Hypothesize
                 .Any<string>()
                 .Within(1.Seconds())
-                .Should(x => x.Should().Be("a"));
+                .Matches(x => x.Should().Be("a"));
 
             await Task.WhenAll(hypothesis.Test("a"), hypothesis.Validate());
         }
@@ -26,7 +26,7 @@ namespace Hypothesist.Tests.Hypothesis
             var hypothesis = Hypothesize
                 .Any<string>()
                 .Within(1.Seconds())
-                .Should(x => x == "a");
+                .Matches(x => x == "a");
 
             await hypothesis
                 .Test("b");
@@ -47,8 +47,8 @@ namespace Hypothesist.Tests.Hypothesis
         {
             var hypothesis = Hypothesize
                 .Any<string>()
-                .Within(TimeSpan.FromSeconds(2))
-                .Should(y => y.Should().Be("b"));
+                .Within(2.Seconds())
+                .Matches(y => y.Should().Be("b"));
             
             await Task.WhenAll(hypothesis.TestSlowly("a", "a", "a", "a", "b"), hypothesis.Validate());
         }
@@ -59,7 +59,7 @@ namespace Hypothesist.Tests.Hypothesis
             var hypothesis = Hypothesize
                 .Any<string>()
                 .Within(1.Seconds())
-                .Should(y => y.Should().Be("a"));
+                .Matches(y => y.Should().Be("a"));
 
             await hypothesis.Test("b");
             await hypothesis.Test("c");
@@ -87,7 +87,7 @@ namespace Hypothesist.Tests.Hypothesis
             var hypothesis = Hypothesize
                 .Any<string>()
                 .Within(1.Seconds())
-                .Should(y => y.Should().Be("b"));
+                .Matches(y => y.Should().Be("b"));
 
             await hypothesis.Test("a");
             await hypothesis.Test("b");

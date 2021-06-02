@@ -15,7 +15,7 @@ namespace Hypothesist.Tests.Hypothesis
             var hypothesis = Hypothesize
                 .Single<string>()
                 .Forever()
-                .Should(_ => { });
+                .Matches(_ => { });
 
             var delay = Task.Delay(5.Seconds());
             var first = await Task.WhenAny(hypothesis.Validate(), delay);
@@ -29,7 +29,7 @@ namespace Hypothesist.Tests.Hypothesis
             var hypothesis = Hypothesize
                 .Single<string>()
                 .Forever()
-                .Should(_ => { });
+                .Matches(_ => { });
             
             Func<Task> act = async () =>
             {
