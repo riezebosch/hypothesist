@@ -1,6 +1,6 @@
-[![nuget](https://img.shields.io/nuget/v/Hypothesize.svg)](https://www.nuget.org/packages/Hypothesize/)
+[![nuget](https://img.shields.io/nuget/v/Hypothesist.svg)](https://www.nuget.org/packages/Hypothesize/)
 
-# Hypothesis
+# Hypothesist
 
 > The future assertion library for .NET.
 
@@ -9,31 +9,43 @@ For example, when building integration tests for a subscriber on a service bus.
 
 ![schema](docs/img/hypothesize.svg)
 
-Define your hypothesis:
+### Define
+
+Define your hypothesis with an _experiment_, _time constraint_ and _test_:
 
 ```c#
-var hypothesis = Future
-    .Any<Data>(x => x.Should().Be(new Data { Value = 1234 }))
-    .Within(TimeSpan.FromSeconds(10));
+var hypothesis = Hypothesize
+    .Any<Data>()
+    .Within(10.Seconds()) // <-- from FluentAssertions
+    .Matches(x => x.Value == 1234);
 ```
 
-Test the hypothesis:
+### Test
+
+You _test_ your _hypothesis_ by providing samples:
 
 ```c#
-// injected into the system under test and invoked from another thread
+await hypothesis.Test(sample);
+```
+
+For example with an injected stub:
+
+```c#
 var service = Substitute.For<IDemoService>();
 service
     .When(x => x.Demo(Arg.Any<Data>()))
     .Do(x => hypothesis.Test(x.Arg<Data>()));
 ```
 
-Validate the hypothesis:
+### Validate
+
+You _validate_ if your _hypothesis_ holds true for the supplied _samples_ during the specified _time window_.
 
 ```c#
 await hypothesis.Validate();
 ```
 
-Somewhere in between you fire off the eventing mechanism that ultimately invokes the injected service.
+But somewhere in between you've fired off the eventing mechanism that ultimately invokes the injected service.
 
 ## Experiments
 
@@ -43,9 +55,9 @@ The two parts of the hypothesis are the experiment and a time constraint.
 
 Validates that _at least one_ item matches the assertion, meaning the experiment stops when this item is observed.
 
-### All
+### Each
 
-Validates that _all_ items that are observed during the experiment match the assertion.
+Validates that _each_ item that is observed during the experiment matches the assertion.
 
 Remark: having no items observed during the time window also means the hypothesis holds true;
 
@@ -59,7 +71,15 @@ Validates that _exactly one_ item is observed that matches the assertion.
 
 Remark: having _other_ items _not matching_ the assert means the hypothesis still holds true.
 
-## Time Constraint
+### Exactly
+
+Validates that _exactly_ the given number of _occurrences_ is observed that matches the assertion within the given timeframe.
+
+### AtLeast
+
+Validates that _at least_ the given number of _occurrences_ is observed that matches the assertion.
+
+## Time
 
 Since an experiment can only run for a certain period you have to specify the time constraint.
 
@@ -71,7 +91,6 @@ Specify the duration between each observation, meaning this is a sliding window 
 
 Let the experiment run forever or until you cancel the supplied cancellation token.
 
-## Assertion
+## Test
 
-The single requirement for the assertion you provide to the experiment is that it throws an exception when the observed item does not meet your expectations. 
-Use the assertion library of your liking, e.g. FluentAssertions.
+Just describe what you expect from the samples that are observed. Either by returning a boolean or throwing an exception.
