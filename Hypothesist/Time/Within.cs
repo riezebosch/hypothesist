@@ -2,26 +2,21 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Threading;
-using System.Threading.Channels;
+using System.Threading.Tasks;
 
 namespace Hypothesist.Time
 {
-    internal class Within<T> : IConstraint<T>
+    internal static class EnumerableExtensions
     {
-        private readonly TimeSpan _window;
-
-        public Within(TimeSpan window) => 
-            _window = window;
-
-        async IAsyncEnumerable<T> IConstraint<T>.Read(ChannelReader<T> reader, [EnumeratorCancellation] CancellationToken token)
+        public static async IAsyncEnumerable<T> Sliding<T>(this IAsyncEnumerable<T> items, TimeSpan window, [EnumeratorCancellation]CancellationToken token)
         {
             using var source = CancellationTokenSource.CreateLinkedTokenSource(token);
-            source.CancelAfter(_window);
+            source.CancelAfter(window);
             
-            await foreach (var item in reader.ReadAllAsync(source.Token))
+            await foreach (var item in items.WithCancellation(source.Token))
             {
                 yield return item;
-                source.CancelAfter(_window);
+                source.CancelAfter(window);
             }
         }
     }

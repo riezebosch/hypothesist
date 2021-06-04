@@ -12,26 +12,22 @@ namespace Hypothesist.Tests.Hypothesis
         public static async Task Match()
         {
             var hypothesis = Hypothesize
-                .AtLeast<string>(2)
-                .Forever()
-                .Matches(x => x == "a");
+                .AtLeast<string>(x => x == "a", 2);
 
             await hypothesis.Test("a");
             await hypothesis.Test("a");
             
             await hypothesis
-                .Validate();
+                .Validate(20.Minutes());
         }
         
         [Fact]
         public static async Task None()
         {
             var hypothesis = Hypothesize
-                .AtLeast<string>(2)
-                .Within(1.Seconds())
-                .Matches(x => x == "a");
+                .AtLeast<string>(x => x == "a", 2);
 
-            Func<Task> act = () => hypothesis.Validate();
+            Func<Task> act = () => hypothesis.Validate(1.Seconds());
             await act.Should()
                 .ThrowAsync<InvalidException<string>>();
         }
@@ -40,13 +36,11 @@ namespace Hypothesist.Tests.Hypothesis
         public static async Task Less()
         {
             var hypothesis = Hypothesize
-                .AtLeast<string>(2)
-                .Within(1.Seconds())
-                .Matches(x => x == "a");
+                .AtLeast<string>(x => x == "a",2);
             
             await hypothesis.Test("a");
             
-            Func<Task> act = () => hypothesis.Validate();
+            Func<Task> act = () => hypothesis.Validate(1.Seconds());
             var ex = await act.Should()
                 .ThrowAsync<InvalidException<string>>();
 
@@ -60,28 +54,24 @@ namespace Hypothesist.Tests.Hypothesis
         public static async Task More()
         {
             var hypothesis = Hypothesize
-                .AtLeast<string>(2)
-                .Within(1.Seconds())
-                .Matches(x => x == "a");
+                .AtLeast<string>(x => x == "a", 2);
             
             await hypothesis.Test("a");
             await hypothesis.Test("a");
             await hypothesis.Test("a");
             
-            await hypothesis.Validate();
+            await hypothesis.Validate(1.Seconds());
         }
         
         [Fact]
         public static async Task Unmatched()
         {
             var hypothesis = Hypothesize
-                .AtLeast<string>(2)
-                .Within(1.Seconds())
-                .Matches(x => x == "a");
+                .AtLeast<string>(x => x == "a",2);
             
             await hypothesis.Test("b");
             
-            Func<Task> act = () => hypothesis.Validate();
+            Func<Task> act = () => hypothesis.Validate(1.Seconds());
             var ex = await act.Should()
                 .ThrowAsync<InvalidException<string>>();
 

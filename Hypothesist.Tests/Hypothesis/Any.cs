@@ -13,25 +13,21 @@ namespace Hypothesist.Tests.Hypothesis
         public async Task Success()
         {
             var hypothesis = Hypothesize
-                .Any<string>()
-                .Within(1.Seconds())
-                .Matches(x => x.Should().Be("a"));
+                .Any<string>(x => x == "a");
 
-            await Task.WhenAll(hypothesis.Test("a"), hypothesis.Validate());
+            await Task.WhenAll(hypothesis.Test("a"), hypothesis.Validate(1.Seconds()));
         }
         
         [Fact]
         public async Task None()
         {
             var hypothesis = Hypothesize
-                .Any<string>()
-                .Within(1.Seconds())
-                .Matches(x => x == "a");
+                .Any<string>(x => x == "a");
 
             await hypothesis
                 .Test("b");
 
-            Func<Task> act = () => hypothesis.Validate();
+            Func<Task> act = () => hypothesis.Validate(1.Seconds());
             var ex = await act
                 .Should()
                 .ThrowAsync<InvalidException<string>>();
@@ -46,25 +42,21 @@ namespace Hypothesist.Tests.Hypothesis
         public async Task Sliding()
         {
             var hypothesis = Hypothesize
-                .Any<string>()
-                .Within(2.Seconds())
-                .Matches(y => y.Should().Be("b"));
+                .Any<string>(y => y == "b");
             
-            await Task.WhenAll(hypothesis.TestSlowly("a", "a", "a", "a", "b"), hypothesis.Validate());
+            await Task.WhenAll(hypothesis.TestSlowly("a", "a", "a", "a", "b"), hypothesis.Validate(2.Seconds()));
         }
         
         [Fact]
         public async Task Aggregate()
         {
             var hypothesis = Hypothesize
-                .Any<string>()
-                .Within(1.Seconds())
-                .Matches(y => y.Should().Be("a"));
+                .Any<string>(y => y == "a");
 
             await hypothesis.Test("b");
             await hypothesis.Test("c");
             
-            Func<Task> act = () => hypothesis.Validate();
+            Func<Task> act = () => hypothesis.Validate(1.Seconds());
             var ex = await act
                 .Should()
                 .ThrowAsync<InvalidException<string>>();
@@ -85,14 +77,12 @@ namespace Hypothesist.Tests.Hypothesis
         public async Task Subsequent()
         {
             var hypothesis = Hypothesize
-                .Any<string>()
-                .Within(1.Seconds())
-                .Matches(y => y.Should().Be("b"));
+                .Any<string>(y => y == "b");
 
             await hypothesis.Test("a");
             await hypothesis.Test("b");
 
-            await hypothesis.Validate();
+            await hypothesis.Validate(1.Seconds());
         }
     }
 }

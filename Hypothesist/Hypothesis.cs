@@ -10,19 +10,28 @@ namespace Hypothesist
     internal class Hypothesis<T> : IHypothesis<T>
     {
         private readonly Channel<T> _channel = Channel.CreateUnbounded<T>();
-        private readonly IObserve<T> _observer;
-        private readonly IConstraint<T> _constraint;
-        private readonly Predicate<T> _match;
+        private readonly IExperiment<T> _experiment;
 
-        public Hypothesis(IObserve<T> observer, IConstraint<T> constraint, Predicate<T> match)
+        public Hypothesis(IExperiment<T> experiment) => _experiment = experiment;
+
+        async Task IHypothesis<T>.Validate(TimeSpan period, CancellationToken token)
         {
-            _observer = observer;
-            _constraint = constraint;
-            _match = match;
+            try
+            {
+                await foreach (var sample in _channel.Reader.ReadAllAsync(token).Sliding(period, token))
+                {
+                    _experiment.OnNext(sample);
+                    if (_experiment.Done)
+                    {
+                        break;
+                    }
+                }
+            }
+            catch (OperationCanceledException)
+            {
+                _experiment.OnCompleted();
+            }
         }
-
-        Task IHypothesis<T>.Validate(CancellationToken token) =>
-            _observer.Observe(_match, _constraint.Read(_channel.Reader, token));
 
         async Task IHypothesis<T>.Test(T sample, CancellationToken token) =>
             await _channel.Writer.WriteAsync(sample, token);

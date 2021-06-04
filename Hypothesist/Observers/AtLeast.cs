@@ -1,35 +1,37 @@
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace Hypothesist.Observers
 {
-    internal class AtLeast<T> : IObserve<T>
+    internal class AtLeast<T> : IExperiment<T>
     {
+        private readonly Predicate<T> _match;
         private readonly int _occurrences;
+        private readonly List<T> _matched = new();
+        private readonly List<T> _unmatched = new();
 
-        public AtLeast(int occurrences) => _occurrences = occurrences;
 
-        async Task IObserve<T>.Observe(Predicate<T> match, IAsyncEnumerable<T> samples)
+        public AtLeast(Predicate<T> match, int occurrences) => 
+            (_match, _occurrences) = (match, occurrences);
+
+        void IObserver<T>.OnCompleted()
         {
-            var matched = new List<T>();
-            var unmatched = new List<T>();
-
-            try
+            if (!Done)
             {
-                await foreach (var sample in samples)
-                {
-                    (match(sample) ? matched : unmatched).Add(sample);
-                    if (matched.Count == _occurrences)
-                    {
-                        return;
-                    }
-                }
-            }
-            catch (OperationCanceledException)
-            {
-                throw new InvalidException<T>(matched, unmatched);
+                throw new InvalidException<T>(_matched, _unmatched);
             }
         }
+
+        void IObserver<T>.OnError(Exception error)
+        {
+        }
+
+        void IObserver<T>.OnNext(T value)
+        {
+            (_match(value) ? _matched : _unmatched).Add(value);
+            Done = _matched.Count == _occurrences;
+        }
+
+        public bool Done { get; private set; }
     }
 }

@@ -1,29 +1,34 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace Hypothesist.Observers
 {
-    internal sealed class Each<T> : IObserve<T>
+    internal sealed class Each<T> : IExperiment<T>
     {
-        async Task IObserve<T>.Observe(Predicate<T> match, IAsyncEnumerable<T> samples)
+        private readonly Predicate<T> _match;
+        private readonly List<T> _matched = new();
+
+        public Each(Predicate<T> match) => 
+            _match = match;
+
+        void IObserver<T>.OnCompleted()
         {
-            try
-            {
-                var matched = new List<T>();
-                await foreach (var sample in samples)
-                {
-                    if (!match(sample))
-                    {
-                        throw new InvalidException<T>(matched,  new[] { sample });
-                    }
-                    
-                    matched.Add(sample);
-                }
-            }
-            catch (OperationCanceledException)
-            {
-            }
         }
+
+        void IObserver<T>.OnError(Exception error)
+        {
+        }
+
+        void IObserver<T>.OnNext(T value)
+        {
+            if (!_match(value))
+            {
+                throw new InvalidException<T>(_matched,  new[] { value });
+            }
+
+            _matched.Add(value);
+        }
+
+        bool IExperiment<T>.Done => false;
     }
 }

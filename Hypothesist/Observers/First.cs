@@ -1,30 +1,32 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace Hypothesist.Observers
 {
-    public class First<T> : IObserve<T>
+    public class First<T> : IExperiment<T>
     {
-        async Task IObserve<T>.Observe(Predicate<T> match, IAsyncEnumerable<T> samples)
-        {
-            try
-            {
-                await foreach (var sample in samples)
-                {
-                    if (match(sample))
-                    {
-                        return;
-                    }
+        private readonly Predicate<T> _match;
 
-                    throw new InvalidException<T>(Enumerable.Empty<T>(),  new[] { sample });
-                }
-            }
-            catch (OperationCanceledException)
-            {
-                throw new TimeoutException();
-            }
+        public First(Predicate<T> match) => 
+            _match = match;
+
+        void IObserver<T>.OnCompleted() => 
+            throw new InvalidException<T>(Enumerable.Empty<T>(), Enumerable.Empty<T>());
+
+        void IObserver<T>.OnError(Exception error)
+        {
         }
+
+        void IObserver<T>.OnNext(T value)
+        {
+            if (!_match(value))
+            {
+                throw new InvalidException<T>(Enumerable.Empty<T>(),  new[] { value });
+            }
+
+            Done = true;
+        }
+
+        public bool Done { get; private set; }
     }
 }

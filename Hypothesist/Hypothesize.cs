@@ -1,26 +1,26 @@
-using Hypothesist.Builders;
+using System;
 using Hypothesist.Observers;
 
 namespace Hypothesist
 {
     public static class Hypothesize 
     {
-        public static IStatement<T> Any<T>() => 
-            new Statement<T>(new AtLeast<T>(1));
+        public static IHypothesis<T> Any<T>(Predicate<T> match) => 
+            new Hypothesis<T>(new AtLeast<T>(match, 1));
 
-        public static IStatement<T> Each<T>() => 
-            new Statement<T>(new Each<T>());
+        public static IHypothesis<T> Each<T>(Predicate<T> match) => 
+            new Hypothesis<T>(new Each<T>(match));
         
-        public static IStatement<T> First<T>() => 
-            new Statement<T>(new First<T>());
+        public static IHypothesis<T> First<T>(Predicate<T> match) => 
+            new Hypothesis<T>(new First<T>(match));
 
-        public static IStatement<T> Single<T>() => 
-            new Statement<T>(new Exactly<T>(1));
+        public static IHypothesis<T> Single<T>(Predicate<T> match) => 
+            new Hypothesis<T>(new Exactly<T>(match, 1));
 
-        public static IStatement<T> Exactly<T>(int occurrences) =>
-            new Statement<T>(new Exactly<T>(occurrences));
+        public static IHypothesis<T> Exactly<T>(Predicate<T> match, int occurrences) =>
+            new Hypothesis<T>(new Exactly<T>(match, occurrences));
 
-        public static IStatement<T> AtLeast<T>(int occurrences) =>
-            new Statement<T>(new AtLeast<T>(occurrences));
+        public static IHypothesis<T> AtLeast<T>(Predicate<T> match, int occurrences) =>
+            new Hypothesis<T>(new AtLeast<T>(match, occurrences));
     }
 }
