@@ -4,15 +4,16 @@ using FluentAssertions;
 using FluentAssertions.Extensions;
 using Xunit;
 
-namespace Hypothesist.Tests.Hypothesis
+namespace Hypothesist.Tests.Experiments
 {
     public class First
     {
         [Fact]
-        public async Task Success()
+        public async Task Valid()
         {
-            var hypothesis = Hypothesize
-                .First<string>(x => x == "a");
+            var hypothesis = Hypothesis
+                .For<string>()
+                .First(x => x == "a");
 
             await Task.WhenAll(hypothesis.Test("a"), hypothesis.Validate(1.Seconds()));
         }
@@ -20,8 +21,9 @@ namespace Hypothesist.Tests.Hypothesis
         [Fact]
         public async Task None()
         {
-            var hypothesis = Hypothesize
-                .First<string>(_ => true);
+            var hypothesis = Hypothesis
+                .For<string>()
+                .First(_ => true);
 
             Func<Task> act = () => hypothesis.Validate(1.Seconds());
             await act
@@ -32,8 +34,9 @@ namespace Hypothesist.Tests.Hypothesis
         [Fact]
         public async Task Invalid()
         {
-            var hypothesis = Hypothesize
-                .First<string>(y => y == "a");
+            var hypothesis = Hypothesis
+                .For<string>()
+                .First(y => y == "a");
             
             await hypothesis.Test("b");
             await hypothesis.Test("a");

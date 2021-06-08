@@ -4,16 +4,18 @@ using FluentAssertions;
 using FluentAssertions.Extensions;
 using Xunit;
 
-namespace Hypothesist.Tests.Hypothesis
+namespace Hypothesist.Tests.Experiments
 {
     public static class Combined
     {
         [Fact]
         public static async Task Match()
         {
-            var hypothesis = Hypothesize
-                .Any<string>(x => x == "a")
-                .Each(x => x != "b");
+            var hypothesis = Hypothesis
+                .For<string>()
+                .Any(x => x == "a")
+                .All(x => x != "b")
+                .Single(x => x == "c");
 
             await hypothesis.Test("a");
             await hypothesis.Test("c");
@@ -24,9 +26,10 @@ namespace Hypothesist.Tests.Hypothesis
         [Fact]
         public static async Task Invalid()
         {
-            var hypothesis = Hypothesize
-                .Any<string>(x => x == "a")
-                .Each(x => x != "b");
+            var hypothesis = Hypothesis
+                .For<string>()
+                .Any(x => x == "a")
+                .All(x => x != "b");
 
             await hypothesis.Test("a");
             await hypothesis.Test("b");

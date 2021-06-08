@@ -4,11 +4,30 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Channels;
 using System.Threading.Tasks;
-using Hypothesist.Observers;
-using Hypothesist.Time;
+using Hypothesist.Experiments;
 
 namespace Hypothesist
 {
+    public static class Hypothesis
+    {
+        public static IHypothesis<T> For<T>() =>
+            new Hypothesis<T>();
+        public static IHypothesis<T> Any<T>(this IHypothesis<T> hypothesis, Predicate<T> match) =>
+            hypothesis.Add(new AtLeast<T>(match, 1));
+        public static IHypothesis<T> All<T>(this IHypothesis<T> hypothesis, Predicate<T> match) =>
+            hypothesis.Add(new All<T>(match));
+        public static IHypothesis<T> First<T>(this IHypothesis<T> hypothesis, Predicate<T> match) =>
+            hypothesis.Add(new First<T>(match));
+        public static IHypothesis<T> Single<T>(this IHypothesis<T> hypothesis, Predicate<T> match) =>
+            hypothesis.Add(new Exactly<T>(match, 1));
+        public static IHypothesis<T> Exactly<T>(this IHypothesis<T> hypothesis, int occurrences, Predicate<T> match) =>
+            hypothesis.Add(new Exactly<T>(match, occurrences));
+        public static IHypothesis<T> AtLeast<T>(this IHypothesis<T> hypothesis, int occurrences, Predicate<T> match) =>
+            hypothesis.Add(new AtLeast<T>(match, occurrences));
+        public static IHypothesis<T> Any<T>(this IHypothesis<T> hypothesis) =>
+            hypothesis.Any(_ => true);
+    }
+
     internal class Hypothesis<T> : IHypothesis<T>
     {
         private readonly Channel<T> _channel = Channel.CreateUnbounded<T>();

@@ -1,8 +1,6 @@
 using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
-namespace Hypothesist.Observers
+namespace Hypothesist.Experiments
 {
     public interface IExperiment<in T> : IObserver<T>
     {

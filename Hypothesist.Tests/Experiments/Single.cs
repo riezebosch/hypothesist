@@ -5,15 +5,16 @@ using FluentAssertions.Extensions;
 using Hypothesist.Tests.Helpers;
 using Xunit;
 
-namespace Hypothesist.Tests.Hypothesis
+namespace Hypothesist.Tests.Experiments
 {
     public class Single
     {
         [Fact]
-        public async Task Success()
+        public async Task Valid()
         {
-            var hypothesis = Hypothesize
-                .Single<string>(x => x == "a");
+            var hypothesis = Hypothesis
+                .For<string>()
+                .Single(x => x == "a");
 
             await Task.WhenAll(hypothesis.Test("a"), hypothesis.Validate(1.Seconds()));
         }
@@ -21,8 +22,9 @@ namespace Hypothesist.Tests.Hypothesis
         [Fact]
         public async Task Others()
         {
-            var hypothesis = Hypothesize
-                .Single<string>(x => x == "a");
+            var hypothesis = Hypothesis
+                .For<string>()
+                .Single(x => x == "a");
 
             await Task.WhenAll(hypothesis.Test("b"),
                 hypothesis.Test("d"),
@@ -35,8 +37,9 @@ namespace Hypothesist.Tests.Hypothesis
         [Fact]
         public async Task None()
         {
-            var hypothesis = Hypothesize
-                .Single<string>(x => x == "a");
+            var hypothesis = Hypothesis
+                .For<string>()
+                .Single(x => x == "a");
 
             Func<Task> act = () => hypothesis.Validate(1.Seconds());
             var ex = await act
@@ -50,10 +53,11 @@ namespace Hypothesist.Tests.Hypothesis
         }
         
         [Fact]
-        public async Task Wrong()
+        public async Task Invalid()
         {
-            var hypothesis = Hypothesize
-                .Single<string>(x => x == "a");
+            var hypothesis = Hypothesis
+                .For<string>()
+                .Single(x => x == "a");
             
             await hypothesis.Test("b");
             
@@ -69,10 +73,11 @@ namespace Hypothesist.Tests.Hypothesis
         }
         
         [Fact]
-        public async Task Multiple()
+        public async Task More()
         {
-            var hypothesis = Hypothesize
-                .Single<string>(x => x == "a");
+            var hypothesis = Hypothesis
+                .For<string>()
+                .Single(x => x == "a");
             
             
             await hypothesis.Test("a");
@@ -98,8 +103,9 @@ namespace Hypothesist.Tests.Hypothesis
         [Fact]
         public async Task FailFast()
         {
-            var hypothesis = Hypothesize
-                .Single<string>(x => x == "a");
+            var hypothesis = Hypothesis
+                .For<string>()
+                .Single(x => x == "a");
                 
             var validate = hypothesis.Validate(1.Seconds());
             var first = await Task.WhenAny(hypothesis.TestSlowly("a", "a", "a", "a"), validate);

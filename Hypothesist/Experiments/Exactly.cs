@@ -1,22 +1,23 @@
 using System;
 using System.Collections.Generic;
 
-namespace Hypothesist.Observers
+namespace Hypothesist.Experiments
 {
-    internal class AtLeast<T> : IExperiment<T>
+    public class Exactly<T> : IExperiment<T>
     {
         private readonly Predicate<T> _match;
         private readonly int _occurrences;
+
         private readonly List<T> _matched = new();
         private readonly List<T> _unmatched = new();
 
 
-        public AtLeast(Predicate<T> match, int occurrences) => 
+        public Exactly(Predicate<T> match, int occurrences) => 
             (_match, _occurrences) = (match, occurrences);
 
         void IObserver<T>.OnCompleted()
         {
-            if (!Done)
+            if (_matched.Count != _occurrences)
             {
                 throw new InvalidException<T>(_matched, _unmatched);
             }
@@ -26,12 +27,9 @@ namespace Hypothesist.Observers
         {
         }
 
-        void IObserver<T>.OnNext(T value)
-        {
+        void IObserver<T>.OnNext(T value) => 
             (_match(value) ? _matched : _unmatched).Add(value);
-            Done = _matched.Count == _occurrences;
-        }
 
-        public bool Done { get; private set; }
+        bool IExperiment<T>.Done => false;
     }
 }

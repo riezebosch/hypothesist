@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Hypothesist.Observers
+namespace Hypothesist.Experiments
 {
-    internal sealed class Each<T> : IExperiment<T>
+    internal sealed class All<T> : IExperiment<T>
     {
         private readonly Predicate<T> _match;
         private readonly List<T> _matched = new();
 
-        public Each(Predicate<T> match) => 
+        public All(Predicate<T> match) => 
             _match = match;
 
         void IObserver<T>.OnCompleted()

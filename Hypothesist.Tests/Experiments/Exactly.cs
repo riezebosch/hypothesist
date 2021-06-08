@@ -4,15 +4,16 @@ using FluentAssertions;
 using FluentAssertions.Extensions;
 using Xunit;
 
-namespace Hypothesist.Tests.Hypothesis
+namespace Hypothesist.Tests.Experiments
 {
     public static class Exactly
     {
         [Fact]
-        public static async Task Match()
+        public static async Task Valid()
         {
-            var hypothesis = Hypothesize
-                .Exactly<string>(x => x == "a",2);
+            var hypothesis = Hypothesis
+                .For<string>()
+                .Exactly(2, x => x == "a");
 
             await hypothesis.Test("a");
             await hypothesis.Test("a");
@@ -24,8 +25,9 @@ namespace Hypothesist.Tests.Hypothesis
         [Fact]
         public static async Task None()
         {
-            var hypothesis = Hypothesize
-                .Exactly<string>(x => x == "a", 2);
+            var hypothesis = Hypothesis
+                .For<string>()
+                .Exactly(2, x => x == "a");
 
             Func<Task> act = () => hypothesis.Validate(1.Seconds());
             await act.Should()
@@ -35,8 +37,9 @@ namespace Hypothesist.Tests.Hypothesis
         [Fact]
         public static async Task Less()
         {
-            var hypothesis = Hypothesize
-                .Exactly<string>(x => x == "a", 2);
+            var hypothesis = Hypothesis
+                .For<string>()
+                .Exactly(2, x => x == "a");
             
             await hypothesis.Test("a");
             
@@ -53,8 +56,9 @@ namespace Hypothesist.Tests.Hypothesis
         [Fact]
         public static async Task More()
         {
-            var hypothesis = Hypothesize
-                .Exactly<string>(x => x == "a", 2);
+            var hypothesis = Hypothesis
+                .For<string>()
+                .Exactly(2, x => x == "a");
             
             await hypothesis.Test("a");
             await hypothesis.Test("a");
@@ -73,8 +77,9 @@ namespace Hypothesist.Tests.Hypothesis
         [Fact]
         public static async Task Unmatched()
         {
-            var hypothesis = Hypothesize
-                .Exactly<string>(x => x == "a",2);
+            var hypothesis = Hypothesis
+                .For<string>()
+                .Exactly(2, x => x == "a");
             
             await hypothesis.Test("b");
             

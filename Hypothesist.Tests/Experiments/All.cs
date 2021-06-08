@@ -6,21 +6,23 @@ using FluentAssertions.Extensions;
 using Hypothesist.Tests.Helpers;
 using Xunit;
 
-namespace Hypothesist.Tests.Hypothesis
+namespace Hypothesist.Tests.Experiments
 {
-    public class Each
+    public class All
     {
         [Fact]
         public async Task Empty() => 
-            await Hypothesize
-                .Each<string>(x => x == "a")
+            await Hypothesis
+                .For<string>()
+                .All(x => x == "a")
                 .Validate(1.Seconds());
         
         [Fact]
-        public async Task Match()
+        public async Task Valid()
         {
-            var hypothesis = Hypothesize
-                .Each<string>(x => x == "a");
+            var hypothesis = Hypothesis
+                .For<string>()
+                .All(x => x == "a");
 
             await Task.WhenAll(hypothesis.Test("a"), hypothesis.Validate(1.Seconds()));
         }
@@ -28,8 +30,9 @@ namespace Hypothesist.Tests.Hypothesis
         [Fact]
         public async Task Invalid()
         {
-            var hypothesis = Hypothesize
-                .Each<string>(y => y == "a");
+            var hypothesis = Hypothesis
+                .For<string>()
+                .All(y => y == "a");
 
             await hypothesis.Test("b");
             
@@ -50,10 +53,11 @@ namespace Hypothesist.Tests.Hypothesis
         }
         
         [Fact]
-        public async Task Subsequent()
+        public async Task Next()
         {
-            var hypothesis = Hypothesize
-                .Each<string>(y => y == "a");
+            var hypothesis = Hypothesis
+                .For<string>()
+                .All(y => y == "a");
             
             await hypothesis.Test("a");
             await hypothesis.Test("b");
@@ -77,8 +81,9 @@ namespace Hypothesist.Tests.Hypothesis
         [Fact]
         public async Task Sliding()
         {
-            var hypothesis = Hypothesize
-                .Each<string>(y => y == "a");
+            var hypothesis = Hypothesis
+                .For<string>()
+                .All(y => y == "a");
 
             Func<Task> act = () => Task.WhenAll(
                 hypothesis.TestSlowly("a", "a", "a", "a", "b"), 
@@ -92,8 +97,9 @@ namespace Hypothesist.Tests.Hypothesis
         public async Task Cancel()
         {
             using var tcs = new CancellationTokenSource(5.Seconds());
-            var hypothesis = Hypothesize
-                .Each<string>(_ => true);
+            var hypothesis = Hypothesis
+                .For<string>()
+                .All(_ => true);
 
             await hypothesis.Validate(20.Minutes(), tcs.Token);
         }

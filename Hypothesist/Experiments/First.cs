@@ -1,7 +1,7 @@
 using System;
 using System.Linq;
 
-namespace Hypothesist.Observers
+namespace Hypothesist.Experiments
 {
     public class First<T> : IExperiment<T>
     {
