@@ -19,6 +19,15 @@ namespace Hypothesist.Tests.Hypothesis
         }
         
         [Fact]
+        public async Task Anything()
+        {
+            var hypothesis = Hypothesize
+                .Any<string>();
+
+            await Task.WhenAll(hypothesis.Test("a"), hypothesis.Validate(1.Seconds()));
+        }
+        
+        [Fact]
         public async Task None()
         {
             var hypothesis = Hypothesize

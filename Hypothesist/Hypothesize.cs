@@ -35,5 +35,11 @@ namespace Hypothesist
 
         public static IHypothesis<T> AtLeast<T>(this IHypothesis<T> hypothesis, Predicate<T> match, int occurrences) =>
             hypothesis.Add(new AtLeast<T>(match, occurrences));
+
+        public static IHypothesis<T> Any<T>() =>
+            new Hypothesis<T>().Any();
+
+        private static IHypothesis<T> Any<T>(this IHypothesis<T> hypothesis) =>
+            hypothesis.Any(_ => true);
     }
 }
