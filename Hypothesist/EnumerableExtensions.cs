@@ -4,7 +4,7 @@ using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Hypothesist.Time
+namespace Hypothesist
 {
     internal static class EnumerableExtensions
     {
