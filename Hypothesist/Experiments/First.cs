@@ -11,7 +11,7 @@ namespace Hypothesist.Experiments
             _match = match;
 
         void IObserver<T>.OnCompleted() => 
-            throw new InvalidException<T>(Enumerable.Empty<T>(), Enumerable.Empty<T>());
+            throw new InvalidException<T>("Expected first sample to match but none received", Enumerable.Empty<T>(), Enumerable.Empty<T>());
 
         void IObserver<T>.OnError(Exception error)
         {
@@ -21,7 +21,7 @@ namespace Hypothesist.Experiments
         {
             if (!_match(value))
             {
-                throw new InvalidException<T>(Enumerable.Empty<T>(),  new[] { value });
+                throw new InvalidException<T>("I expected the first sample to match, but it did not.", Enumerable.Empty<T>(),  new[] { value });
             }
 
             Done = true;

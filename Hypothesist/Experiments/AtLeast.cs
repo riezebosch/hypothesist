@@ -18,7 +18,7 @@ namespace Hypothesist.Experiments
         {
             if (!Done)
             {
-                throw new InvalidException<T>(_matched, _unmatched);
+                throw new InvalidException<T>($"I expected at least {_occurrences} matches but found only {_matched.Count}.", _matched, _unmatched);
             }
         }
 

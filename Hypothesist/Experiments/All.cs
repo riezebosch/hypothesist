@@ -23,7 +23,7 @@ namespace Hypothesist.Experiments
         {
             if (!_match(value))
             {
-                throw new InvalidException<T>(_matched,  new[] { value });
+                throw new InvalidException<T>("I expected all samples to match, but one did not.", _matched,  new[] { value });
             }
 
             _matched.Add(value);

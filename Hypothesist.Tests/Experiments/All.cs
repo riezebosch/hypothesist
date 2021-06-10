@@ -34,6 +34,7 @@ namespace Hypothesist.Tests.Experiments
                 .For<string>()
                 .All(y => y == "a");
 
+            await hypothesis.Test("a");
             await hypothesis.Test("b");
             
             Func<Task> act = () => hypothesis.Validate(1.Seconds());
@@ -41,10 +42,16 @@ namespace Hypothesist.Tests.Experiments
                 .Should()
                 .ThrowAsync<InvalidException<string>>();
 
+            ex.WithMessage(@"*all samples*one did not.
+Matched:
+* a
+Unmatched:
+* b");
+
             ex.Which
                 .Matched
                 .Should()
-                .BeEmpty();
+                .BeEquivalentTo("a");
             
             ex.Which
                 .Unmatched
