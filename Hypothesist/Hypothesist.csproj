@@ -16,6 +16,6 @@
         <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
         <RepositoryType>git</RepositoryType>
         <RepositoryUrl>https://github.com/riezebosch/hypothesis.git</RepositoryUrl>
-        <Version>2.0.11</Version>
+        <Version>2.0.12</Version>
     </PropertyGroup>
 </Project>
