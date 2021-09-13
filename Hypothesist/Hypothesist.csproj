@@ -20,6 +20,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <None Include="..\README.md" Pack="true" PackagePath="" />
+        <None Include="..\README.md" Pack="true" PackagePath="" />
+        <None Include="..\docs\img\hypothesize.svg" Pack="true" PackagePath="docs\img" />
     </ItemGroup>
 </Project>

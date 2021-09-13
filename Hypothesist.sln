@@ -10,11 +10,14 @@ ProjectSection(SolutionItems) = preProject
 	appveyor.yml = appveyor.yml
 EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hypothesist.MassTransit", "Hypothesist.MassTransit\Hypothesist.MassTransit.csproj", "{FA8F22CA-89B2-48EC-ADF8-5C78358B066B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hypothesist.MassTransit", "MassTransit\Hypothesist.MassTransit\Hypothesist.MassTransit.csproj", "{FA8F22CA-89B2-48EC-ADF8-5C78358B066B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hypothesist.MassTransit.Tests", "Hypothesist.MassTransit.Tests\Hypothesist.MassTransit.Tests.csproj", "{3F439768-286D-49CF-BEA9-1FC1C8886A75}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hypothesist.MassTransit.Tests", "MassTransit\Hypothesist.MassTransit.Tests\Hypothesist.MassTransit.Tests.csproj", "{3F439768-286D-49CF-BEA9-1FC1C8886A75}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MassTransit", "MassTransit", "{266AFCDA-BB0D-4886-B1AC-CB03AB9F4D64}"
+ProjectSection(SolutionItems) = preProject
+	MassTransit\README.md = MassTransit\README.md
+EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

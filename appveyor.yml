@@ -6,7 +6,7 @@ configuration: Release
 only_commits:
   files:
     - Hypothesist/**/*
-    - Hypothesist.MassTransit/**/*
+    - MassTransit/Hypothesist.MassTransit/**/*
 dotnet_csproj:
   patch: true
   file: '**\*.csproj'

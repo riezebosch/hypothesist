@@ -10,7 +10,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Hypothesist\Hypothesist.csproj" />
+      <ProjectReference Include="..\..\Hypothesist\Hypothesist.csproj" />
     </ItemGroup>
 
     <PropertyGroup>
