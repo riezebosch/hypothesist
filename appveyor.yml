@@ -34,7 +34,7 @@ for:
         secure: ZneDqBLs+xrWqEBGSw3vHRgUMI8po2s/NF1KV4YYrBKPmFqhUCbGCCLUpvDj2S7I
     after_test:
       - bash <(curl -s https://codecov.io/bash)
-      - dotnet tool restore && cd Hypothesist.Tests && dotnet dotnet-stryker --reporters "['dashboard']" --dashboard-api-key $STRYKER_DASHBOARD_API_KEY --dashboard-project github.com/riezebosch/Hypothesist
+      - dotnet tool restore && cd Hypothesist.Tests && dotnet dotnet-stryker --reporters "['dashboard']" --dashboard-api-key $STRYKER_DASHBOARD_API_KEY --dashboard-project github.com/riezebosch/Hypothesist/main
     deploy:
       - provider: NuGet
         api_key:
