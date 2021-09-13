@@ -1,0 +1,28 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netcoreapp3.1</TargetFramework>
+        <RootNamespace>Hypothesist</RootNamespace>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="MassTransit" Version="[7,)" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Hypothesist\Hypothesist.csproj" />
+    </ItemGroup>
+
+    <PropertyGroup>
+        <Authors>Manuel Riezebosch</Authors>
+        <NeutralLanguage>en-US</NeutralLanguage>
+        <Description>Plugin the hypothesis as a consumer into MassTransit to validate message arrival.</Description>
+        <PackageReleaseNotes>🤟</PackageReleaseNotes>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+        <PackageTags>test;assert;hypothesis;future;async;asynchronous;event;driven;architecture;eda;thread;synchronization;masstransit</PackageTags>
+        <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+        <RepositoryType>git</RepositoryType>
+        <RepositoryUrl>https://github.com/riezebosch/hypothesis.git</RepositoryUrl>
+        <Version>2.0.12</Version>
+    </PropertyGroup>
+</Project>

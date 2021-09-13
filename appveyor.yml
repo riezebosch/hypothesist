@@ -1,0 +1,43 @@
+version: 2.0.{build}
+pull_requests:
+  do_not_increment_build_number: true
+image: Ubuntu2004
+configuration: Release
+only_commits:
+  files:
+    - Hypothesist/**/*
+    - Hypothesist.MassTransit/**/*
+dotnet_csproj:
+  patch: true
+  file: '**\*.csproj'
+  version: '{version}'
+  package_version: '{version}'
+  assembly_version: '{version}'
+  file_version: '{version}'
+  informational_version: '{version}'
+build:
+  publish_nuget: true
+  verbosity: minimal
+after_test:
+  - dotnet tool restore && cd Hypothesist.Tests && dotnet dotnet-stryker
+test_script:
+  - dotnet test --collect:"XPlat Code Coverage"
+for:
+  -
+    branches:
+      only:
+        - main
+        - stryker
+    environment:
+      CODECOV_TOKEN: 82855860-51e6-44b7-a0e4-75f725a6a7be
+      STRYKER_DASHBOARD_API_KEY:
+        secure: ZneDqBLs+xrWqEBGSw3vHRgUMI8po2s/NF1KV4YYrBKPmFqhUCbGCCLUpvDj2S7I
+    after_test:
+      - bash <(curl -s https://codecov.io/bash)
+      - dotnet tool restore && cd Hypothesist.Tests && dotnet dotnet-stryker --reporters "['dashboard']" --dashboard-api-key $STRYKER_DASHBOARD_API_KEY --dashboard-project github.com/riezebosch/Hypothesist
+    deploy:
+      - provider: NuGet
+        api_key:
+          secure: 8aOBvUnWUu9wLpdkMUCL3bJ5nJXWk/ammKeJk+LVDtyNpIfQLjEOgcDVr9VNgJ6d
+        on:
+          branch: main

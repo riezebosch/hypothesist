@@ -1,4 +1,4 @@
-[![nuget](https://img.shields.io/nuget/v/Hypothesist.svg)](https://www.nuget.org/packages/Hypothesize/)
+[![nuget](https://img.shields.io/nuget/v/Hypothesist.svg)](https://www.nuget.org/packages/Hypothesist/)
 
 # Hypothesist
 
@@ -34,6 +34,32 @@ var service = Substitute.For<IDemoService>();
 service
     .When(x => x.Demo(Arg.Any<Data>()))
     .Do(x => hypothesis.Test(x.Arg<Data>()));
+```
+
+or with a hand-rolled implementation:
+
+```c#
+class TestService : IDemoService
+{
+    private readonly IHypothesis<Data> _hypothesis;
+
+    public TestService(IHypothesis<Data> hypothesis) => 
+        _hypothesis = hypothesis;
+
+    public Task Demo(Data data) =>
+        _hypothesis.Test(data);
+}
+
+var service = new TestService(hypothesis);
+```
+
+or with the consumer factory [Hypothesist.MassTransit](https://www.nuget.org/packages/Hypothesist.MassTransit/) when using [MassTransit](https://masstransit-project.com):
+
+```c#
+cfg.ReceiveEndpoint("...", x =>
+{
+    x.Consumer(hypothesis.AsConsumer);
+});
 ```
 
 ### Validate
