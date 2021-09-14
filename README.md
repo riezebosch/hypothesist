@@ -1,4 +1,6 @@
 [![nuget](https://img.shields.io/nuget/v/Hypothesist.svg)](https://www.nuget.org/packages/Hypothesist/)
+[![codecov](https://codecov.io/gh/riezebosch/hypothesist/branch/main/graph/badge.svg)](https://codecov.io/gh/riezebosch/hypothesist)
+[![build status](https://ci.appveyor.com/api/projects/status/21ssw4pgaxpcppp2/branch/main?svg=true)](https://ci.appveyor.com/project/riezebosch/hypothesist)
 
 # Hypothesist
 
