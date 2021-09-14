@@ -28,7 +28,8 @@ namespace Hypothesist.Tests.Experiments
             Func<Task> act = () => hypothesis.Validate(1.Seconds());
             await act
                 .Should()
-                .ThrowAsync<InvalidException<string>>();
+                .ThrowAsync<InvalidException<string>>()
+                .WithMessage("*none*");
         }
         
         [Fact]
@@ -44,7 +45,8 @@ namespace Hypothesist.Tests.Experiments
             Func<Task> act = () => hypothesis.Validate(1.Seconds());
             var ex = await act
                 .Should()
-                .ThrowAsync<InvalidException<string>>();
+                .ThrowAsync<InvalidException<string>>()
+                .WithMessage("*first*");
 
             ex.Which
                 .Matched

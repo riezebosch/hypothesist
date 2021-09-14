@@ -31,7 +31,8 @@ namespace Hypothesist.Tests.Experiments
 
             Func<Task> act = () => hypothesis.Validate(1.Seconds());
             await act.Should()
-                .ThrowAsync<InvalidException<string>>();
+                .ThrowAsync<InvalidException<string>>()
+                .WithMessage("*at least 2*");
         }
         
         [Fact]
