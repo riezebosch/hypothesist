@@ -1,5 +1,6 @@
 [![nuget](https://img.shields.io/nuget/v/Hypothesist.svg)](https://www.nuget.org/packages/Hypothesist/)
 [![codecov](https://codecov.io/gh/riezebosch/hypothesist/branch/main/graph/badge.svg)](https://codecov.io/gh/riezebosch/hypothesist)
+[![stryker](https://img.shields.io/endpoint?style=flat&label=stryker&url=https%3A%2F%2Fbadge-api.stryker-mutator.io%2Fgithub.com%2Friezebosch%2Fhypothesist%2Fmain)](https://dashboard.stryker-mutator.io/reports/github.com/riezebosch/hypothesist/main)
 [![build status](https://ci.appveyor.com/api/projects/status/21ssw4pgaxpcppp2/branch/main?svg=true)](https://ci.appveyor.com/project/riezebosch/hypothesist)
 
 # Hypothesist

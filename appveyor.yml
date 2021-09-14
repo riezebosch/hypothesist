@@ -31,10 +31,10 @@ for:
     environment:
       CODECOV_TOKEN: 82855860-51e6-44b7-a0e4-75f725a6a7be
       STRYKER_DASHBOARD_API_KEY:
-        secure: ZneDqBLs+xrWqEBGSw3vHRgUMI8po2s/NF1KV4YYrBKPmFqhUCbGCCLUpvDj2S7I
+        secure: zNvmKO5DpbfDRV+WFnyaetwbAexTXGi4rMSwJH9NnTtOS3SDAUjD8CIVGRsReMRf
     after_test:
       - bash <(curl -s https://codecov.io/bash)
-      - dotnet tool restore && cd Hypothesist.Tests && dotnet dotnet-stryker --reporters "['dashboard']" --dashboard-api-key $STRYKER_DASHBOARD_API_KEY --dashboard-project github.com/riezebosch/Hypothesist/main
+      - dotnet tool restore && cd Hypothesist.Tests && dotnet dotnet-stryker --reporters "['dashboard']" --dashboard-api-key $STRYKER_DASHBOARD_API_KEY --dashboard-project github.com/riezebosch/hypothesist/main
     deploy:
       - provider: NuGet
         api_key:
