@@ -29,7 +29,7 @@ namespace Hypothesist.Experiments
         void IObserver<T>.OnNext(T value)
         {
             (_match(value) ? _matched : _unmatched).Add(value);
-            Done = _matched.Count == _occurrences;
+            Done = _matched.Count >= _occurrences;
         }
 
         public bool Done { get; private set; }

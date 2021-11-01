@@ -59,6 +59,7 @@ namespace Hypothesist.Tests.Experiments
         {
             var hypothesis = Hypothesis
                 .For<string>()
+                .All(x => x != "b") // combined with non-breaking observer
                 .AtLeast(2, x => x == "a");
             
             await hypothesis.Test("a");
