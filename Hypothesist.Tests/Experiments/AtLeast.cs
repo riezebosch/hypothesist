@@ -1,91 +1,89 @@
-using System;
 using System.Threading.Tasks;
 using FluentAssertions;
 using FluentAssertions.Extensions;
 using Xunit;
 
-namespace Hypothesist.Tests.Experiments
+namespace Hypothesist.Tests.Experiments;
+
+public static class AtLeast
 {
-    public static class AtLeast
+    [Fact]
+    public static async Task Valid()
     {
-        [Fact]
-        public static async Task Valid()
-        {
-            var hypothesis = Hypothesis
-                .For<string>()
-                .AtLeast(2, x => x == "a");
+        var hypothesis = Hypothesis
+            .For<string>()
+            .AtLeast(2, x => x == "a");
 
-            await hypothesis.Test("a");
-            await hypothesis.Test("a");
+        await hypothesis.Test("a");
+        await hypothesis.Test("a");
             
-            await hypothesis
-                .Validate(20.Minutes());
-        }
+        await hypothesis
+            .Validate(20.Minutes());
+    }
         
-        [Fact]
-        public static async Task None()
-        {
-            var hypothesis = Hypothesis
-                .For<string>()
-                .AtLeast(2, x => x == "a");
+    [Fact]
+    public static async Task None()
+    {
+        var hypothesis = Hypothesis
+            .For<string>()
+            .AtLeast(2, x => x == "a");
 
-            Func<Task> act = () => hypothesis.Validate(1.Seconds());
-            await act.Should()
-                .ThrowAsync<InvalidException<string>>()
-                .WithMessage("*at least 2*");
-        }
+        var act = () => hypothesis.Validate(1.Seconds());
+        await act.Should()
+            .ThrowAsync<InvalidException<string>>()
+            .WithMessage("*at least 2*");
+    }
         
-        [Fact]
-        public static async Task Less()
-        {
-            var hypothesis = Hypothesis
-                .For<string>()
-                .AtLeast(2, x => x == "a");
+    [Fact]
+    public static async Task Less()
+    {
+        var hypothesis = Hypothesis
+            .For<string>()
+            .AtLeast(2, x => x == "a");
             
-            await hypothesis.Test("a");
+        await hypothesis.Test("a");
             
-            Func<Task> act = () => hypothesis.Validate(1.Seconds());
-            var ex = await act.Should()
-                .ThrowAsync<InvalidException<string>>();
+        var act = () => hypothesis.Validate(1.Seconds());
+        var ex = await act.Should()
+            .ThrowAsync<InvalidException<string>>();
 
-            ex.Which
-                .Matched
-                .Should()
-                .BeEquivalentTo("a");
-        }
+        ex.Which
+            .Matched
+            .Should()
+            .BeEquivalentTo("a");
+    }
         
-        [Fact]
-        public static async Task More()
-        {
-            var hypothesis = Hypothesis
-                .For<string>()
-                .All(x => x != "b") // combined with non-breaking observer
-                .AtLeast(2, x => x == "a");
+    [Fact]
+    public static async Task More()
+    {
+        var hypothesis = Hypothesis
+            .For<string>()
+            .All(x => x != "b") // combined with non-breaking observer
+            .AtLeast(2, x => x == "a");
             
-            await hypothesis.Test("a");
-            await hypothesis.Test("a");
-            await hypothesis.Test("a");
+        await hypothesis.Test("a");
+        await hypothesis.Test("a");
+        await hypothesis.Test("a");
             
-            await hypothesis.Validate(1.Seconds());
-        }
+        await hypothesis.Validate(1.Seconds());
+    }
         
-        [Fact]
-        public static async Task Unmatched()
-        {
-            var hypothesis = Hypothesis
-                .For<string>()
-                .AtLeast(2, x => x == "a");
+    [Fact]
+    public static async Task Unmatched()
+    {
+        var hypothesis = Hypothesis
+            .For<string>()
+            .AtLeast(2, x => x == "a");
             
-            await hypothesis.Test("b");
+        await hypothesis.Test("b");
             
-            Func<Task> act = () => hypothesis.Validate(1.Seconds());
-            var ex = await act.Should()
-                .ThrowAsync<InvalidException<string>>();
+        var act = () => hypothesis.Validate(1.Seconds());
+        var ex = await act.Should()
+            .ThrowAsync<InvalidException<string>>();
 
-            ex.Which
-                .Unmatched
-                .Should()
-                .BeEquivalentTo("b");
-        }
+        ex.Which
+            .Unmatched
+            .Should()
+            .BeEquivalentTo("b");
     }
 }

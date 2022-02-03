@@ -1,9 +1,8 @@
 using System;
 
-namespace Hypothesist.Experiments
+namespace Hypothesist.Experiments;
+
+public interface IExperiment<in T> : IObserver<T>
 {
-    public interface IExperiment<in T> : IObserver<T>
-    {
-        bool Done { get; }
-    }
+    bool Done { get; }
 }
