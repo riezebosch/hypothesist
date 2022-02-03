@@ -1,3 +1,5 @@
+[![nuget](https://img.shields.io/nuget/v/Hypothesist.MassTransit.svg)](https://www.nuget.org/packages/Hypothesist.MassTransit/)
+
 # Hypothesist.MassTransit
 
 Use [Hypothesist](https://nuget.org/packages/hypothesist) to validate received messages as a [MassTransit](https://masstransit-project.com) consumer. 
