@@ -56,13 +56,17 @@ class TestService : IDemoService
 var service = new TestService(hypothesis);
 ```
 
-or with the consumer factory [Hypothesist.MassTransit](https://www.nuget.org/packages/Hypothesist.MassTransit/) when using [MassTransit](https://masstransit-project.com):
+or with the consumer factory [Hypothesist.MassTransit](MassTransit) when using [MassTransit](https://masstransit-project.com):
 
 ```c#
-cfg.ReceiveEndpoint("...", x =>
-{
-    x.Consumer(hypothesis.AsConsumer);
-});
+cfg.ReceiveEndpoint("...", x => x.Consumer(hypothesis.AsConsumer));
+```
+
+or with the handler factory [Hypothesist.Rebus](Rebus) when using [Rebus](https://github.com/rebus-org/):
+
+```c#
+using var activator = new BuiltinHandlerActivator()
+    .Register(hypothesis.AsHandler);
 ```
 
 ### Validate
