@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace Hypothesist;
@@ -7,32 +8,42 @@ namespace Hypothesist;
 public class InvalidException<T> : Exception
 {
     public InvalidException(string message, IEnumerable<T> matched,
-        IEnumerable<T> unmatched) : base(ToString(message, matched, unmatched)) =>
+        IEnumerable<T> unmatched) : base(Format(message, matched, unmatched)) =>
         (Matched, Unmatched) = (matched, unmatched);
 
     public IEnumerable<T> Matched { get; }
     public IEnumerable<T> Unmatched { get; }
 
-    private static string ToString(string message, IEnumerable<T> matched, IEnumerable<T> unmatched)
+    private static string Format(string message, IEnumerable<T> matched, IEnumerable<T> unmatched)
     {
-        var sb = new StringBuilder(message);
-        sb.AppendLine();
+        var sb = new StringBuilder(message)
+            .AppendLine();
 
-        ToString(sb, matched, "Matched:");
-        sb.AppendLine();
-            
-        ToString(sb, unmatched, "Unmatched:");
+        Section(sb, "Matched:", matched);
+        Section(sb, "Unmatched:", unmatched);
+        
         return sb.ToString();
     }
 
-    private static void ToString(StringBuilder sb, IEnumerable<T> matched, string label)
+    private static StringBuilder Section(StringBuilder sb, string label, IEnumerable<T> items)
     {
-        sb.Append(label);
-        foreach (var item in matched)
+        sb.AppendLine(label);
+        return items.Any() 
+            ? List(sb, items)
+            : None(sb);
+    }
+
+    private static StringBuilder None(StringBuilder sb) => 
+        sb.AppendLine("   <none>");
+
+    private static StringBuilder List(StringBuilder sb, IEnumerable<T> items)
+    {
+        foreach (var item in items)
         {
-            sb.AppendLine();
             sb.Append("* ");
-            sb.Append(item);
+            sb.AppendLine(item.ToString());
         }
+
+        return sb;
     }
 }
