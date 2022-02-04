@@ -18,7 +18,7 @@ public sealed class RabbitMqContainer : IDisposable
             .Build()
             .Start();
 
-    public string ConnectionString => $"amqp://guest:guest@{_container.ToHostExposedEndpoint("5672/tcp")}";
+    public string ConnectionString => $"amqp://guest:guest@localhost:{_container.ToHostExposedEndpoint("5672/tcp").Port}"; // on linux the host exposed endpoint is: 0.0.0.0 for some reason
 
     void IDisposable.Dispose() => 
         _container.Dispose();
