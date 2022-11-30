@@ -8,6 +8,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_", "_", "{1C794CD5-CCA8-43
 ProjectSection(SolutionItems) = preProject
 	README.md = README.md
 	appveyor.yml = appveyor.yml
+	stryker-config.yaml = stryker-config.yaml
 EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hypothesist.MassTransit", "MassTransit\Hypothesist.MassTransit\Hypothesist.MassTransit.csproj", "{FA8F22CA-89B2-48EC-ADF8-5C78358B066B}"

@@ -1,0 +1,7 @@
+stryker-config:
+  project: Hypothesist.csproj
+  test-projects:
+    - ./Hypothesist.Tests
+  project-info:
+    name: github.com/riezebosch/hypothesist
+    version: main

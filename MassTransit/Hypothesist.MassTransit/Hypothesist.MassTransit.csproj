@@ -18,7 +18,7 @@
         <Authors>Manuel Riezebosch</Authors>
         <NeutralLanguage>en-US</NeutralLanguage>
         <Description>Plugin the hypothesis as a consumer into MassTransit to validate message arrival.</Description>
-        <PackageReleaseNotes>🤟</PackageReleaseNotes>
+        <PackageReleaseNotes>Update to MT8+</PackageReleaseNotes>
         <PackageReadmeFile>README.md</PackageReadmeFile>
         <PackageTags>test;assert;hypothesis;future;async;asynchronous;event;driven;architecture;eda;thread;synchronization;masstransit</PackageTags>
         <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
