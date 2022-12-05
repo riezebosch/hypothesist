@@ -21,7 +21,7 @@ build:
 after_test:
   - dotnet tool restore && dotnet stryker --reporter cleartext --since=main -c 4
 test_script:
-  - dotnet test --collect:"XPlat Code Coverage"
+  - dotnet test -s test.runsettings
 for:
   - branches:
       only:
@@ -32,7 +32,7 @@ for:
       STRYKER_DASHBOARD_API_KEY:
         secure: zNvmKO5DpbfDRV+WFnyaetwbAexTXGi4rMSwJH9NnTtOS3SDAUjD8CIVGRsReMRf
     after_test:
-      - bash <(curl -s https://codecov.io/bash)
+      - curl -Os https://uploader.codecov.io/latest/linux/codecov && chmod +x codecov && ./codecov -t ${CODECOV_TOKEN} -f **/*.cobertura.xml
       - dotnet tool restore && dotnet stryker -f stryker-config.yaml --reporter dashboard --dashboard-api-key $STRYKER_DASHBOARD_API_KEY -c 4
     deploy:
       - provider: NuGet
