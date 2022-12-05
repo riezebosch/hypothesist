@@ -15,10 +15,6 @@ internal sealed class All<T> : IExperiment<T>
     {
     }
 
-    void IObserver<T>.OnError(Exception error)
-    {
-    }
-
     void IObserver<T>.OnNext(T value)
     {
         if (!_match(value))

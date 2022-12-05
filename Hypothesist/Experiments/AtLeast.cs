@@ -21,11 +21,7 @@ internal class AtLeast<T> : IExperiment<T>
             throw new InvalidException<T>($"I expected at least {_occurrences} matches but found only {_matched.Count}.", _matched, _unmatched);
         }
     }
-
-    void IObserver<T>.OnError(Exception error)
-    {
-    }
-
+    
     void IObserver<T>.OnNext(T value)
     {
         (_match(value) ? _matched : _unmatched).Add(value);

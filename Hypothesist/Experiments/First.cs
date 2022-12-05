@@ -13,10 +13,6 @@ public class First<T> : IExperiment<T>
     void IObserver<T>.OnCompleted() => 
         throw new InvalidException<T>("Expected first sample to match but none received", Enumerable.Empty<T>(), Enumerable.Empty<T>());
 
-    void IObserver<T>.OnError(Exception error)
-    {
-    }
-
     void IObserver<T>.OnNext(T value)
     {
         if (!_match(value))

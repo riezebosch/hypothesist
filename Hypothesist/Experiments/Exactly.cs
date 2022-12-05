@@ -23,10 +23,6 @@ public class Exactly<T> : IExperiment<T>
         }
     }
 
-    void IObserver<T>.OnError(Exception error)
-    {
-    }
-
     void IObserver<T>.OnNext(T value) => 
         (_match(value) ? _matched : _unmatched).Add(value);
 
