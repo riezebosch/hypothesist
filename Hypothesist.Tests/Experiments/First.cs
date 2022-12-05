@@ -28,7 +28,7 @@ public class First
         await act
             .Should()
             .ThrowAsync<InvalidException<string>>()
-            .WithMessage("*none*");
+            .WithMessage("*but none received*");
     }
         
     [Fact]
