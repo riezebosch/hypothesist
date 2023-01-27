@@ -18,10 +18,15 @@ dotnet_csproj:
 build:
   publish_nuget: true
   verbosity: minimal
+before_test:
+  - az login --service-principal --tenant 2654a8a0-11c9-4a1f-8d0a-1125f5e81496 -u d8c7ff4d-558a-425b-87fc-debc292ae362 -p $SPN_TOKEN
 after_test:
   - dotnet tool restore && dotnet stryker --reporter cleartext --since=main -c 4
 test_script:
   - dotnet test -s test.runsettings
+environment:
+  SPN_TOKEN:
+    secure: Sag3dVLEaqxdGQAFyq1jQKy3oOwFLg2TgTJQxsHaagFV6qS33FAbYC5uB8LX5O4K
 for:
   - branches:
       only:

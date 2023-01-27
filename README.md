@@ -110,3 +110,9 @@ Validates that _exactly_ the given number of _occurrences_ is observed that matc
 ### AtLeast
 
 Validates that _at least_ the given number of _occurrences_ is observed that matches the assertion.
+
+## Adapters
+
+* [Rebus](Rebus)
+* [MassTransit](MassTransit)
+* [Azure ServiceBus](ServiceBus)

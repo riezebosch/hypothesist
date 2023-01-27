@@ -1,0 +1,33 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Azure.Messaging.ServiceBus" Version="[7,)" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\Hypothesist\Hypothesist.csproj" />
+    </ItemGroup>
+
+    <PropertyGroup>
+        <Authors>Manuel Riezebosch</Authors>
+        <NeutralLanguage>en-US</NeutralLanguage>
+        <Description>Test your hypothesis easily with a ServiceBusProcessor.</Description>
+        <PackageReleaseNotes>🤟</PackageReleaseNotes>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+        <PackageTags>test;assert;hypothesis;future;async;asynchronous;event;driven;architecture;eda;thread;synchronization;azure;servicebus</PackageTags>
+        <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+        <RepositoryType>git</RepositoryType>
+        <RepositoryUrl>https://github.com/riezebosch/hypothesis.git</RepositoryUrl>
+        <Version>2.0.12</Version>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <None Include="..\README.md" Pack="true" PackagePath="" />
+    </ItemGroup>
+</Project>
