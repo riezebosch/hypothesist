@@ -28,5 +28,10 @@ internal class AtLeast<T> : IExperiment<T>
         Done = _matched.Count >= _occurrences;
     }
 
+    #if NETSTANDARD2_0
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    void IObserver<T>.OnError(Exception error) => throw new NotImplementedException();
+    #endif
+
     public bool Done { get; private set; }
 }
