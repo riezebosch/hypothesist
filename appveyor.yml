@@ -5,8 +5,8 @@ image: Ubuntu2004
 configuration: Release
 only_commits:
   files:
-    - Hypothesist/**/*
-    - MassTransit/Hypothesist.MassTransit/**/*
+    - '**/*.cs'
+    - '**/*.csproj'
 dotnet_csproj:
   patch: true
   file: '**\*.csproj'

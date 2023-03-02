@@ -21,7 +21,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\Hypothesist\Hypothesist.csproj" />
       <ProjectReference Include="..\Hypothesist.Rebus\Hypothesist.Rebus.csproj" />
     </ItemGroup>
 

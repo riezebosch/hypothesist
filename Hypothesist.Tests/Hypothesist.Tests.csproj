@@ -16,7 +16,8 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Hypothesist\Hypothesist.csproj" />
+      <ProjectReference Include="..\Hypothesist\Hypothesist.csproj" Properties="TargetFramework=netstandard2.0" />
+      <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="7.0.0"  />
     </ItemGroup>
 
 </Project>
