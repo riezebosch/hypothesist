@@ -29,7 +29,7 @@ public class AsHandlerTests : IClassFixture<RabbitMqContainer>
         await bus
             .Subscribe<UserLoggedIn>();
 
-        var producer = Configure.With(new EmptyActivator())
+        var producer = Configure.OneWayClient()
             .Transport(t => t.UseRabbitMqAsOneWayClient(_container.ConnectionString))
             .Start();
         
