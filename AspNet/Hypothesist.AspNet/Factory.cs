@@ -10,4 +10,11 @@ public static class Factory
             await next(context);
             await hypothesis.Test(select(context.Request));
         };
+    
+    public static Func<HttpContext, RequestDelegate, Task> AsMiddleware<T>(this IHypothesis<T> hypothesis, Func<HttpRequest, Task<T>> select) =>
+        async (context, next) =>
+        {
+            await next(context);
+            await hypothesis.Test(await select(context.Request));
+        };
 }

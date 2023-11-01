@@ -26,6 +26,23 @@ public class Middleware
 
         await hypothesis.Validate(3.Seconds());
     }
+    
+    [Fact]
+    public async Task Async()
+    {
+        var input = Guid.NewGuid();
+        var hypothesis = Hypothesis
+            .For<string>()
+            .Any(string.IsNullOrEmpty);
+
+        await using var app = Setup(_url);
+        app.Use(hypothesis.AsMiddleware(async request => await new StreamReader(request.Body).ReadToEndAsync()));
+        
+        await app.StartAsync();
+        await Test(_url, input);
+
+        await hypothesis.Validate(3.Seconds());
+    }
 
     private static WebApplication Setup(Uri url)
     {
