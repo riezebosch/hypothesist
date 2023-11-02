@@ -9,12 +9,12 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Hypothesist.AspNet.Tests;
 
-public class Middleware
+public class FromRequest
 {
     private readonly Uri _url = new("http://localhost:1234");
 
     [Fact]
-    public async Task FromQuery()
+    public async Task Select()
     {
         var input = Guid.NewGuid();
         var hypothesis = Hypothesis
@@ -22,7 +22,10 @@ public class Middleware
             .Any(s => s == input);
 
         await using var app = Setup(_url);
-        app.Use(hypothesis.TestFromRequest(request => Guid.Parse(request.Query["data"]!)));
+        app.Use(hypothesis
+            .Test()
+            .FromRequest()
+            .Select(request => Guid.Parse(request.Query["data"]!)));
         
         await app.StartAsync();
         await Test(_url, input);
@@ -39,9 +42,12 @@ public class Middleware
             .Any(s => s == input);
 
         await using var app = Setup(_url);
-        app.UseWhen(context => context.Request.Path == "/hello",
-            then => then.Use(hypothesis.TestFromRequest(request => Guid.Parse(request.Query["data"]!))));
-        
+        app.UseWhen(context => context.Request.Path == "/hello", then => then
+            .Use(hypothesis
+                .Test()
+                .FromRequest()
+                .Select(request => Guid.Parse(request.Query["data"]!))));
+    
         await app.StartAsync();
         await Test(_url, input);
 
@@ -49,7 +55,7 @@ public class Middleware
     }
     
     [Fact]
-    public async Task FromBody()
+    public async Task Body()
     {
         var input = Guid.NewGuid();
         var hypothesis = Hypothesis
@@ -57,7 +63,10 @@ public class Middleware
             .Any(s => s == input);
 
         await using var app = Setup(_url);
-        app.Use(hypothesis.TestFromRequestBody(body => JsonSerializer.DeserializeAsync<Guid>(body).AsTask()));
+        app.Use(hypothesis
+            .Test()
+            .FromRequest()
+            .Body(body => JsonSerializer.DeserializeAsync<Guid>(body)));
         
         await app.StartAsync();
         await Test(_url, input);

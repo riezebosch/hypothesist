@@ -7,10 +7,9 @@ Use [Hypothesist](https://nuget.org/packages/hypothesist) to validate received r
 ## Arrange
 
 ```c#
-var data = "some-input"; 
 var hypothesis = Hypothesis
     .For<string>()
-    .Any(x => x == data);
+    .Any(x => x == "some-data");
 ```
 
 ```c#
@@ -18,7 +17,32 @@ var builder = WebApplication.CreateBuilder(args);
 
 await using var app = builder.Build();
 app.MapGet("/hello", (string data) => Results.Ok());
-app.Use(hypothesis.TestFromRequest(request => request.Query["data"]!));
+app.Use(hypothesis
+    .Test()
+    .FromRequest()
+    .Select(request => request.Query["data"]!));
+```
+
+or:
+
+```csharp
+app.Use(hypothesis
+    .Test()
+    .FromRequest()
+    .Body(body => JsonSerializer.DeserializeAsync<Guid>(body)));
+```
+
+**Remark**: the [order of middleware](https://learn.microsoft.com/en-us/aspnet/core/fundamentals/middleware/?view=aspnetcore-7.0#middleware-order)
+is _very_ important! If you plugin the hypothesis _after_ the body is read by other middleware, you will receive an empty stream and thus no content.
+
+and when there are more invocations to be expected on other routes:
+
+```csharp
+app.UseWhen(context => context.Request.Path == "/hello", then => then
+    .Use(hypothesis
+        .Test()
+        .FromRequest()
+        .Select(request => request.Query["data"]!)));
 ```
 
 ## Act
