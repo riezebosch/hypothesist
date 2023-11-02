@@ -6,11 +6,15 @@ Use [Hypothesist](https://nuget.org/packages/hypothesist) to validate received r
 
 ## Arrange
 
+Define the hypothesis:
+
 ```c#
 var hypothesis = Hypothesis
     .For<string>()
     .Any(x => x == "some-data");
 ```
+
+Insert the middleware to test from incoming requests:
 
 ```c#
 var builder = WebApplication.CreateBuilder(args);
@@ -23,7 +27,7 @@ app.Use(hypothesis
     .Select(request => request.Query["data"]!));
 ```
 
-or:
+or read from the body:
 
 ```csharp
 app.Use(hypothesis
@@ -35,7 +39,7 @@ app.Use(hypothesis
 **Remark**: the [order of middleware](https://learn.microsoft.com/en-us/aspnet/core/fundamentals/middleware/?view=aspnetcore-7.0#middleware-order)
 is _very_ important! If you plugin the hypothesis _after_ the body is read by other middleware, you will receive an empty stream and thus no content.
 
-and when there are more invocations to be expected on other routes:
+Only test for a specific route:
 
 ```csharp
 app.UseWhen(context => context.Request.Path == "/hello", then => then
@@ -43,6 +47,16 @@ app.UseWhen(context => context.Request.Path == "/hello", then => then
         .Test()
         .FromRequest()
         .Select(request => request.Query["data"]!)));
+```
+
+or directly test from an [endpoint filter](https://learn.microsoft.com/en-us/aspnet/core/fundamentals/minimal-apis/min-api-filters?view=aspnetcore-7.0):
+
+```csharp
+app.MapPost("/hello", ([FromBody]Guid body) => Results.Ok(body))
+    .AddEndpointFilter(hypothesis
+        .Test()
+        .FromEndpoint()
+        .Select(context => context.GetArgument<Guid>(0)));
 ```
 
 ## Act

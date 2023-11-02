@@ -1,8 +1,7 @@
-using System.Net;
-using System.Net.Http.Json;
 using System.Text.Json;
 using FluentAssertions;
 using FluentAssertions.Extensions;
+using Flurl.Http;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -30,7 +29,8 @@ public class FromRequest
         await app.StartAsync();
         await Test(_url, input);
 
-        await hypothesis.Validate(3.Seconds());
+        await hypothesis
+            .Validate(3.Seconds());
     }
     
     [Fact]
@@ -51,7 +51,8 @@ public class FromRequest
         await app.StartAsync();
         await Test(_url, input);
 
-        await hypothesis.Validate(3.Seconds());
+        await hypothesis
+            .Validate(3.Seconds());
     }
     
     [Fact]
@@ -66,12 +67,13 @@ public class FromRequest
         app.Use(hypothesis
             .Test()
             .FromRequest()
-            .Body(body => JsonSerializer.DeserializeAsync<Guid>(body)));
+            .Body(stream => JsonSerializer.DeserializeAsync<Guid>(stream)));
         
         await app.StartAsync();
         await Test(_url, input);
 
-        await hypothesis.Validate(3.Seconds());
+        await hypothesis
+            .Validate(3.Seconds());
     }
 
     private static WebApplication Setup(Uri url)
@@ -87,14 +89,10 @@ public class FromRequest
 
     private static async Task Test(Uri url, Guid input)
     {
-        using var client = new HttpClient { BaseAddress = url };
-        using var response = await client.PostAsJsonAsync($"hello?data={input}", input);
-        response
-            .StatusCode
-            .Should()
-            .Be(HttpStatusCode.OK, await response.Content.ReadAsStringAsync());
-
-        var result = await response.Content.ReadFromJsonAsync<Guid>();
+        using var response = await (url + $"hello?data={input}").PostJsonAsync(input);
+        response.StatusCode.Should().Be(200);
+        
+        var result = await response.GetJsonAsync<Guid>();
         result.Should().Be(input);
     }
 }

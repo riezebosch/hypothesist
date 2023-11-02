@@ -1,5 +1,3 @@
-using Microsoft.AspNetCore.Http;
-
 namespace Hypothesist.AspNet;
 
 public class Test<T>
@@ -9,4 +7,8 @@ public class Test<T>
     public Test(IHypothesis<T> hypothesis) => _hypothesis = hypothesis;
 
     public FromRequest<T> FromRequest() => new(_hypothesis);
+
+    #if NET7_0
+    public FromEndpoint<T> FromEndpoint() => new(_hypothesis);
+    #endif
 }

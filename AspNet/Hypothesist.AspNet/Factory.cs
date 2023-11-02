@@ -1,5 +1,3 @@
-using Microsoft.AspNetCore.Http;
-
 namespace Hypothesist.AspNet;
 
 public static class Factory
