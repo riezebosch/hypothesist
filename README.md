@@ -5,7 +5,7 @@
 
 # Hypothesist
 
-> The future assertion library for .NET.
+> The "future" assertion library for .NET, promise!
 
 This library is there to help you do assertions on events that are about to happen in the near future.
 For example, when building integration tests for a subscriber on a service bus.
@@ -14,7 +14,7 @@ For example, when building integration tests for a subscriber on a service bus.
 
 ### Define
 
-Define your hypothesis with an _experiment_, _time constraint_ and _test_:
+Define your hypothesis with an _experiment_, _time constraint_ and then _test_ with samples:
 
 ```c#
 var hypothesis = Hypothesis
@@ -69,6 +69,8 @@ using var activator = new BuiltinHandlerActivator()
     .Register(hypothesis.AsHandler);
 ```
 
+Just checkout the available [adapters](#adapters) for more information!
+
 ### Validate
 
 You _validate_ if your _hypothesis_ holds true for the supplied _samples_ during the specified _time window_.
@@ -113,6 +115,9 @@ Validates that _at least_ the given number of _occurrences_ is observed that mat
 
 ## Adapters
 
+Some adapters wrapping around the hypothesis to make invocation convenient:
+
 * [Rebus](Rebus)
 * [MassTransit](MassTransit)
 * [Azure ServiceBus](ServiceBus)
+* [ASPNET Core](AspNet)

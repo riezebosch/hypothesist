@@ -2,14 +2,14 @@
 
 # Hypothesist.AspNet
 
-Use [Hypothesist](https://nuget.org/packages/hypothesist) to validate received requests via [ASP.NET middleware](https://learn.microsoft.com/en-us/aspnet/core/fundamentals/middleware/).
+Use [Hypothesist](https://nuget.org/packages/hypothesist) to validate received requests (from an external invocation) via [ASP.NET middleware](https://learn.microsoft.com/en-us/aspnet/core/fundamentals/middleware/).
 
 ## Arrange
 
 ```c#
 var data = "some-input"; 
 var hypothesis = Hypothesis
-    .For<Message>()
+    .For<string>()
     .Any(x => x == data);
 ```
 
@@ -17,12 +17,13 @@ var hypothesis = Hypothesis
 var builder = WebApplication.CreateBuilder(args);
 
 await using var app = builder.Build();
-app.MapGet("/hello", () => Results.Ok());
-app.UseDeveloperExceptionPage();
-app.Use(hypothesis.AsMiddleware(request => request.Query["data"]!));
+app.MapGet("/hello", (string data) => Results.Ok());
+app.Use(hypothesis.TestFromRequest(request => request.Query["data"]!));
 ```
 
 ## Act
+
+Invocation on the endpoint from some external program, like:
 
 ```bash
 curl 'http://localhost:1234/hello?data=some-input'
