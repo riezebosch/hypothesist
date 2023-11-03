@@ -6,7 +6,7 @@ public class Test<T>
 
     public Test(IHypothesis<T> hypothesis) => _hypothesis = hypothesis;
 
-    public FromRequest<T> FromRequest() => new(_hypothesis);
+    public Request.From<T> FromRequest() => new(_hypothesis);
 
     #if NET7_0
     public Endpoint.From<T> FromEndpoint() => new(_hypothesis);

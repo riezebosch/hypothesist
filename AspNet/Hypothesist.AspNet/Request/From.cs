@@ -1,12 +1,12 @@
 using Microsoft.AspNetCore.Http;
 
-namespace Hypothesist.AspNet;
+namespace Hypothesist.AspNet.Request;
 
-public class FromRequest<T>
+public class From<T>
 {
     private readonly IHypothesis<T> _hypothesis;
 
-    public FromRequest(IHypothesis<T> hypothesis) => _hypothesis = hypothesis;
+    public From(IHypothesis<T> hypothesis) => _hypothesis = hypothesis;
 
     public Func<HttpContext, RequestDelegate, Task> Select(Func<HttpRequest, T> select) =>
         async (context, next) =>

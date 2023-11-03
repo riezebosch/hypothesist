@@ -15,7 +15,5 @@ public class From<T>
             await _hypothesis.Test(select(context));
             return await next(context);
         };
-
-    public When<T> When(Predicate<EndpointFilterInvocationContext> when) => new(this, when);
 }
 #endif

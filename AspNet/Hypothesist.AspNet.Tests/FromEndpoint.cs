@@ -1,16 +1,15 @@
 using FluentAssertions.Extensions;
 using Flurl.Http;
+using Hypothesist.AspNet.Endpoint;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Routing;
 
 namespace Hypothesist.AspNet.Tests;
 
 public class FromEndpoint
 {
     private readonly Uri _url = new("http://localhost:2345");
-    private RouteGroupBuilder group;
 
     [Fact]
     public async Task Select()
@@ -47,12 +46,12 @@ public class FromEndpoint
         await using var app = builder.Build();
         app.UseDeveloperExceptionPage();
 
-        group = app.MapGroup("")
+        var group = app.MapGroup("")
             .AddEndpointFilter(hypothesis
                 .Test()
                 .FromEndpoint()
-                .When(context => context.HttpContext.Request.Path == "/a")
-                .Select(context => context.GetArgument<int>(0)));
+                .Select(context => context.GetArgument<int>(0))
+                .When(context => context.HttpContext.Request.Path == "/a"));
         
         group.MapPost("/a", ([FromBody]int body) => Results.Ok());
         group.MapPost("/b", ([FromBody]Guid body) => Results.Ok());
