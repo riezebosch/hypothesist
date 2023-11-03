@@ -9,6 +9,6 @@ public class Test<T>
     public FromRequest<T> FromRequest() => new(_hypothesis);
 
     #if NET7_0
-    public FromEndpoint<T> FromEndpoint() => new(_hypothesis);
+    public Endpoint.From<T> FromEndpoint() => new(_hypothesis);
     #endif
 }

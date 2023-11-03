@@ -1,13 +1,13 @@
 #if NET7_0
 using Microsoft.AspNetCore.Http;
 
-namespace Hypothesist.AspNet;
+namespace Hypothesist.AspNet.Endpoint;
 
-public class FromEndpoint<T>
+public class From<T>
 {
     private readonly IHypothesis<T> _hypothesis;
 
-    public FromEndpoint(IHypothesis<T> hypothesis) => _hypothesis = hypothesis;
+    public From(IHypothesis<T> hypothesis) => _hypothesis = hypothesis;
 
     public Func<EndpointFilterInvocationContext, EndpointFilterDelegate, ValueTask<object?>> Select(Func<EndpointFilterInvocationContext, T> select) =>
         async (context, next) =>
@@ -15,5 +15,7 @@ public class FromEndpoint<T>
             await _hypothesis.Test(select(context));
             return await next(context);
         };
+
+    public When<T> When(Predicate<EndpointFilterInvocationContext> when) => new(this, when);
 }
 #endif
