@@ -7,13 +7,10 @@ public class From<T>
 {
     private readonly IHypothesis<T> _hypothesis;
 
-    public From(IHypothesis<T> hypothesis) => _hypothesis = hypothesis;
+    public From(IHypothesis<T> hypothesis) => 
+        _hypothesis = hypothesis;
 
-    public Func<EndpointFilterInvocationContext, EndpointFilterDelegate, ValueTask<object?>> Select(Func<EndpointFilterInvocationContext, T> select) =>
-        async (context, next) =>
-        {
-            await _hypothesis.Test(select(context));
-            return await next(context);
-        };
+    public IEndpointFilter Select(Func<EndpointFilterInvocationContext, T> select) => 
+        new Select<T>(_hypothesis, select);
 }
 #endif
