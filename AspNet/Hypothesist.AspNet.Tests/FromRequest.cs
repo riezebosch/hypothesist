@@ -1,6 +1,7 @@
 using System.Text.Json;
 using FluentAssertions;
 using FluentAssertions.Extensions;
+using Flurl;
 using Flurl.Http;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -89,7 +90,11 @@ public class FromRequest
 
     private static async Task Test(Uri url, Guid input)
     {
-        using var response = await (url + $"hello?data={input}").PostJsonAsync(input);
+        using var response = await url
+            .AppendPathSegment("hello")
+            .SetQueryParam("data", input)
+            .PostJsonAsync(input);
+        
         response.StatusCode.Should().Be(200);
         
         var result = await response.GetJsonAsync<Guid>();

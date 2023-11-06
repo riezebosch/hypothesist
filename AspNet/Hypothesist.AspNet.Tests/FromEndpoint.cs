@@ -1,4 +1,5 @@
 using FluentAssertions.Extensions;
+using Flurl;
 using Flurl.Http;
 using Hypothesist.AspNet.Endpoint;
 using Microsoft.AspNetCore.Builder;
@@ -30,7 +31,7 @@ public class FromEndpoint
                 .Select(context => context.GetArgument<Guid>(0)));
         
         await app.StartAsync();
-        await (_url + "hello").PostJsonAsync(input);
+        _ = await _url.AppendPathSegment("hello").PostJsonAsync(input);
 
         await hypothesis.Validate(3.Seconds());
     }
@@ -57,8 +58,8 @@ public class FromEndpoint
         group.MapPost("/b", ([FromBody]Guid body) => Results.Ok());
         
         await app.StartAsync();
-        await (_url + "a").PostJsonAsync(10);
-        await (_url + "b").PostJsonAsync(Guid.NewGuid());
+        _ = await _url.AppendPathSegment("a").PostJsonAsync(10);
+        _ = await _url.AppendPathSegment("b").PostJsonAsync(Guid.NewGuid());
 
         await hypothesis.Validate(3.Seconds());
     }
