@@ -35,6 +35,6 @@ public static class Combined
 
         var act = () => hypothesis.Validate(2.Seconds());
         await act.Should()
-            .ThrowAsync<InvalidException<string>>();
+            .ThrowAsync<HypothesisInvalidException<string>>();
     }
 }

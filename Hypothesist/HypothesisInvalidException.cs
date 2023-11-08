@@ -5,11 +5,14 @@ using System.Text;
 
 namespace Hypothesist;
 
-public class InvalidException<T> : Exception
+public class HypothesisInvalidException<T> : Exception
 {
-    public InvalidException(string message, IEnumerable<T> matched,
-        IEnumerable<T> unmatched) : base(Format(message, matched, unmatched)) =>
-        (Matched, Unmatched) = (matched, unmatched);
+    public HypothesisInvalidException(string message, IEnumerable<T> matched, IEnumerable<T> unmatched) 
+        : base(Format(message, matched, unmatched))
+    {
+        Matched = matched;
+        Unmatched = unmatched;
+    }
 
     public IEnumerable<T> Matched { get; }
     public IEnumerable<T> Unmatched { get; }
@@ -25,25 +28,24 @@ public class InvalidException<T> : Exception
         return sb.ToString();
     }
 
-    private static StringBuilder Section(StringBuilder sb, string label, IEnumerable<T> items)
+    private static void Section(StringBuilder sb, string label, IEnumerable<T> items)
     {
         sb.AppendLine(label);
-        return items.Any() 
-            ? List(sb, items)
-            : None(sb);
+        if (items.Any())
+            List(sb, items);
+        else
+            None(sb);
     }
 
-    private static StringBuilder None(StringBuilder sb) => 
+    private static void None(StringBuilder sb) => 
         sb.AppendLine("   <none>");
 
-    private static StringBuilder List(StringBuilder sb, IEnumerable<T> items)
+    private static void List(StringBuilder sb, IEnumerable<T> items)
     {
         foreach (var item in items)
         {
             sb.Append("* ");
             sb.AppendLine(item.ToString());
         }
-
-        return sb;
     }
 }

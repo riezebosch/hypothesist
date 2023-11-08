@@ -43,7 +43,7 @@ public class Single
         var act = () => hypothesis.Validate(1.Seconds());
         var ex = await act
             .Should()
-            .ThrowAsync<InvalidException<string>>();
+            .ThrowAsync<HypothesisInvalidException<string>>();
 
         ex.Which
             .Unmatched
@@ -63,7 +63,7 @@ public class Single
         var act = () => hypothesis.Validate(1.Seconds());
         var ex = await act
             .Should()
-            .ThrowAsync<InvalidException<string>>();
+            .ThrowAsync<HypothesisInvalidException<string>>();
 
         ex.Which
             .Unmatched
@@ -86,7 +86,7 @@ public class Single
         var act = () => hypothesis.Validate(1.Seconds());
         var ex = await act
             .Should()
-            .ThrowAsync<InvalidException<string>>();
+            .ThrowAsync<HypothesisInvalidException<string>>();
 
         ex.Which
             .Matched

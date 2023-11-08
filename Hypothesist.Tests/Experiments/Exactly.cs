@@ -31,7 +31,7 @@ public static class Exactly
 
         var act = () => hypothesis.Validate(1.Seconds());
         await act.Should()
-            .ThrowAsync<InvalidException<string>>()
+            .ThrowAsync<HypothesisInvalidException<string>>()
             .WithMessage("*exactly*");
     }
         
@@ -46,7 +46,7 @@ public static class Exactly
             
         Func<Task> act = () => hypothesis.Validate(1.Seconds());
         var ex = await act.Should()
-            .ThrowAsync<InvalidException<string>>();
+            .ThrowAsync<HypothesisInvalidException<string>>();
 
         ex.Which
             .Matched
@@ -67,7 +67,7 @@ public static class Exactly
             
         Func<Task> act = () => hypothesis.Validate(1.Seconds());
         var ex = await act.Should()
-            .ThrowAsync<InvalidException<string>>();
+            .ThrowAsync<HypothesisInvalidException<string>>();
 
         ex.Which
             .Matched
@@ -86,7 +86,7 @@ public static class Exactly
             
         Func<Task> act = () => hypothesis.Validate(1.Seconds());
         var ex = await act.Should()
-            .ThrowAsync<InvalidException<string>>();
+            .ThrowAsync<HypothesisInvalidException<string>>();
 
         ex.Which
             .Unmatched
