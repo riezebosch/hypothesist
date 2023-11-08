@@ -30,7 +30,7 @@ public static class AtLeast
 
         var act = () => hypothesis.Validate(1.Seconds());
         await act.Should()
-            .ThrowAsync<InvalidException<string>>()
+            .ThrowAsync<HypothesisInvalidException<string>>()
             .WithMessage("*at least 2*");
     }
         
@@ -45,7 +45,7 @@ public static class AtLeast
             
         var act = () => hypothesis.Validate(1.Seconds());
         var ex = await act.Should()
-            .ThrowAsync<InvalidException<string>>();
+            .ThrowAsync<HypothesisInvalidException<string>>();
 
         ex.Which
             .Matched
@@ -79,7 +79,7 @@ public static class AtLeast
             
         var act = () => hypothesis.Validate(1.Seconds());
         var ex = await act.Should()
-            .ThrowAsync<InvalidException<string>>();
+            .ThrowAsync<HypothesisInvalidException<string>>();
 
         ex.Which
             .Unmatched

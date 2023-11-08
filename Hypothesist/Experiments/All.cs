@@ -19,7 +19,7 @@ internal sealed class All<T> : IExperiment<T>
     {
         if (!_match(value))
         {
-            throw new InvalidException<T>("I expected all samples to match, but one did not.", _matched,  new[] { value });
+            throw new HypothesisInvalidException<T>("I expected all samples to match, but one did not.", _matched,  new[] { value });
         }
 
         _matched.Add(value);

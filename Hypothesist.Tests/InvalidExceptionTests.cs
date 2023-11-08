@@ -9,7 +9,7 @@ public static class InvalidExceptionTests
     [Fact]
     public static void Message()
     {
-        var exception = new InvalidException<string>(
+        var exception = new HypothesisInvalidException<string>(
             "expectations not met", 
             new[] { "this is matched" },
             new[] { "this is unmatched" });
@@ -28,7 +28,7 @@ Unmatched:
     [Fact]
     public static void None()
     {
-        var exception = new InvalidException<string>(
+        var exception = new HypothesisInvalidException<string>(
             "expectations not met", 
             Enumerable.Empty<string>(),
             Enumerable.Empty<string>());

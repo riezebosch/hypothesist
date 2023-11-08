@@ -40,13 +40,15 @@ public class All
         var act = () => hypothesis.Validate(1.Seconds());
         var ex = await act
             .Should()
-            .ThrowAsync<InvalidException<string>>();
+            .ThrowAsync<HypothesisInvalidException<string>>();
 
-        ex.WithMessage(@"*all samples*one did not.
-Matched:
-* a
-Unmatched:
-* b");
+        ex.WithMessage("""
+                       *all samples*one did not.
+                       Matched:
+                       * a
+                       Unmatched:
+                       * b
+                       """);
 
         ex.Which
             .Matched
@@ -72,7 +74,7 @@ Unmatched:
         Func<Task> act = () => hypothesis.Validate(1.Seconds());
         var ex = await act
             .Should()
-            .ThrowAsync<InvalidException<string>>();
+            .ThrowAsync<HypothesisInvalidException<string>>();
 
         ex.Which
             .Matched
@@ -97,7 +99,7 @@ Unmatched:
             hypothesis.Validate(2.Seconds()));
         await act
             .Should()
-            .ThrowAsync<InvalidException<string>>();
+            .ThrowAsync<HypothesisInvalidException<string>>();
     }
         
     [Fact]

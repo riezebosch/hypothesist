@@ -27,7 +27,7 @@ public class First
         var act = () => hypothesis.Validate(1.Seconds());
         await act
             .Should()
-            .ThrowAsync<InvalidException<string>>()
+            .ThrowAsync<HypothesisInvalidException<string>>()
             .WithMessage("*but none received*");
     }
         
@@ -44,7 +44,7 @@ public class First
         var act = () => hypothesis.Validate(1.Seconds());
         var ex = await act
             .Should()
-            .ThrowAsync<InvalidException<string>>()
+            .ThrowAsync<HypothesisInvalidException<string>>()
             .WithMessage("*first*");
 
         ex.Which

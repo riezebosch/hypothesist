@@ -43,7 +43,7 @@ public class Any
         var act = () => hypothesis.Validate(1.Seconds());
         var ex = await act
             .Should()
-            .ThrowAsync<InvalidException<string>>();
+            .ThrowAsync<HypothesisInvalidException<string>>();
 
         ex.Which
             .Unmatched

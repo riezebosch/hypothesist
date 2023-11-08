@@ -18,7 +18,7 @@ internal class AtLeast<T> : IExperiment<T>
     {
         if (!Done)
         {
-            throw new InvalidException<T>($"I expected at least {_occurrences} matches but found only {_matched.Count}.", _matched, _unmatched);
+            throw new HypothesisInvalidException<T>($"I expected at least {_occurrences} matches but found only {_matched.Count}.", _matched, _unmatched);
         }
     }
     
