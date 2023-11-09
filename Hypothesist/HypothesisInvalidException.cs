@@ -45,7 +45,7 @@ public class HypothesisInvalidException<T> : Exception
         foreach (var item in items)
         {
             sb.Append("* ");
-            sb.AppendLine(item.ToString());
+            sb.AppendLine(item?.ToString() ?? "null");
         }
     }
 }

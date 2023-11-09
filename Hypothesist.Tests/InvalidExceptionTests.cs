@@ -17,12 +17,14 @@ public static class InvalidExceptionTests
         exception
             .Message
             .Should()
-            .Be(@"expectations not met
-Matched:
-* this is matched
-Unmatched:
-* this is unmatched
-");
+            .Be("""
+                expectations not met
+                Matched:
+                * this is matched
+                Unmatched:
+                * this is unmatched
+
+                """);
     }
     
     [Fact]
@@ -36,11 +38,35 @@ Unmatched:
         exception
             .Message
             .Should()
-            .Be(@"expectations not met
-Matched:
-   <none>
-Unmatched:
-   <none>
-");
+            .Be("""
+                expectations not met
+                Matched:
+                   <none>
+                Unmatched:
+                   <none>
+
+                """);
+    }
+    
+    [Fact]
+    public static void Null()
+    {
+        var exception = new HypothesisInvalidException<string>(
+            "expectations not met", 
+            new []{ "1", null },
+            Enumerable.Empty<string>());
+
+        exception
+            .Message
+            .Should()
+            .Be("""
+                expectations not met
+                Matched:
+                * 1
+                * null
+                Unmatched:
+                   <none>
+
+                """);
     }
 }
