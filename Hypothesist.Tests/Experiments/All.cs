@@ -94,7 +94,7 @@ public class All
             .For<string>()
             .All(y => y == "a");
 
-        Func<Task> act = () => Task.WhenAll(
+        var act = () => Task.WhenAll(
             hypothesis.TestSlowly("a", "a", "a", "a", "b"), 
             hypothesis.Validate(2.Seconds()));
         await act
