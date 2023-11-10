@@ -25,10 +25,8 @@ internal sealed class All<T> : IExperiment<T>
         _matched.Add(value);
     }
 
-    #if NETSTANDARD2_0
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     void IObserver<T>.OnError(Exception error) => throw new NotImplementedException();
-    #endif
 
     bool IExperiment<T>.Done => false;
 }

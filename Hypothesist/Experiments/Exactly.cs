@@ -26,10 +26,8 @@ public class Exactly<T> : IExperiment<T>
     void IObserver<T>.OnNext(T value) => 
         (_match(value) ? _matched : _unmatched).Add(value);
 
-    #if NETSTANDARD2_0
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     void IObserver<T>.OnError(Exception error) => throw new NotImplementedException();
-    #endif
 
     bool IExperiment<T>.Done => false;
 }
