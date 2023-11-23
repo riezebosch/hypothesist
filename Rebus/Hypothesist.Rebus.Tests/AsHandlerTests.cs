@@ -21,7 +21,7 @@ public class AsHandlerTests : IClassFixture<RabbitMqContainer>
         
         using var activator = new BuiltinHandlerActivator()
             .Register(hypothesis.AsHandler);
-        activator.Handle<UserLoggedIn>(m => hypothesis.Test(m));
+
         var bus = Configure.With(activator)
             .Transport(t => t.UseRabbitMq(_container.ConnectionString, "consumer-queue"))
             .Start();
