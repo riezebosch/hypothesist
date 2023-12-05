@@ -1,23 +1,14 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 
 namespace Hypothesist;
 
-public class HypothesisInvalidException<T> : Exception
+public class HypothesisInvalidException<T>(string message, ICollection<T> matched, ICollection<T> unmatched)
+    : Exception(Format(message, matched, unmatched))
 {
-    public HypothesisInvalidException(string message, IEnumerable<T> matched, IEnumerable<T> unmatched) 
-        : base(Format(message, matched, unmatched))
-    {
-        Matched = matched;
-        Unmatched = unmatched;
-    }
+    public IEnumerable<T> Matched { get; } = matched;
+    public IEnumerable<T> Unmatched { get; } = unmatched;
 
-    public IEnumerable<T> Matched { get; }
-    public IEnumerable<T> Unmatched { get; }
-
-    private static string Format(string message, IEnumerable<T> matched, IEnumerable<T> unmatched)
+    private static string Format(string message, ICollection<T> matched, ICollection<T> unmatched)
     {
         var sb = new StringBuilder(message)
             .AppendLine();
@@ -28,7 +19,7 @@ public class HypothesisInvalidException<T> : Exception
         return sb.ToString();
     }
 
-    private static void Section(StringBuilder sb, string label, IEnumerable<T> items)
+    private static void Section(StringBuilder sb, string label, ICollection<T> items)
     {
         sb.AppendLine(label);
         if (items.Any())

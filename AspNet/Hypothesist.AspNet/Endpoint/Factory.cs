@@ -1,4 +1,4 @@
-#if NET7_0
+#if NET7_0_OR_GREATER
 using Microsoft.AspNetCore.Http;
 
 namespace Hypothesist.AspNet.Endpoint;

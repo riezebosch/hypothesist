@@ -1,11 +1,3 @@
-using System;
-using System.Threading;
-using System.Threading.Tasks;
-using FluentAssertions;
-using FluentAssertions.Extensions;
-using Hypothesist.Tests.Helpers;
-using Xunit;
-
 namespace Hypothesist.Tests.Experiments;
 
 public class All
@@ -71,7 +63,7 @@ public class All
         await hypothesis.Test("a");
         await hypothesis.Test("b");
 
-        Func<Task> act = () => hypothesis.Validate(1.Seconds());
+        var act = () => hypothesis.Validate(1.Seconds());
         var ex = await act
             .Should()
             .ThrowAsync<HypothesisInvalidException<string>>();

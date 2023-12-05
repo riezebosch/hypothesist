@@ -2,23 +2,19 @@ using Microsoft.AspNetCore.Http;
 
 namespace Hypothesist.AspNet.Request;
 
-public class From<T>
+public class From<T>(IHypothesis<T> hypothesis)
 {
-    private readonly IHypothesis<T> _hypothesis;
-
-    public From(IHypothesis<T> hypothesis) => _hypothesis = hypothesis;
-
     public Func<HttpContext, RequestDelegate, Task> Select(Func<HttpRequest, T> select) =>
         async (context, next) =>
         {
-            await _hypothesis.Test(select(context.Request));
+            await hypothesis.Test(select(context.Request));
             await next(context);
         };
 
     public Func<HttpContext, RequestDelegate, Task> Body(Func<Stream, ValueTask<T>> body) =>
         async (context, next) =>
         {
-            await _hypothesis.Test(await Stream(context.Request, body));
+            await hypothesis.Test(await Stream(context.Request, body));
             await next(context);
         };
 

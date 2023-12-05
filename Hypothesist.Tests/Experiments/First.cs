@@ -1,8 +1,3 @@
-using System.Threading.Tasks;
-using FluentAssertions;
-using FluentAssertions.Extensions;
-using Xunit;
-
 namespace Hypothesist.Tests.Experiments;
 
 public class First

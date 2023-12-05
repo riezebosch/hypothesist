@@ -1,9 +1,3 @@
-using System;
-using System.Threading.Tasks;
-using FluentAssertions;
-using FluentAssertions.Extensions;
-using Xunit;
-
 namespace Hypothesist.Tests.Experiments;
 
 public static class Exactly
@@ -44,7 +38,7 @@ public static class Exactly
             
         await hypothesis.Test("a");
             
-        Func<Task> act = () => hypothesis.Validate(1.Seconds());
+        var act = () => hypothesis.Validate(1.Seconds());
         var ex = await act.Should()
             .ThrowAsync<HypothesisInvalidException<string>>();
 
@@ -65,7 +59,7 @@ public static class Exactly
         await hypothesis.Test("a");
         await hypothesis.Test("a");
             
-        Func<Task> act = () => hypothesis.Validate(1.Seconds());
+        var act = () => hypothesis.Validate(1.Seconds());
         var ex = await act.Should()
             .ThrowAsync<HypothesisInvalidException<string>>();
 
@@ -84,7 +78,7 @@ public static class Exactly
             
         await hypothesis.Test("b");
             
-        Func<Task> act = () => hypothesis.Validate(1.Seconds());
+        var act = () => hypothesis.Validate(1.Seconds());
         var ex = await act.Should()
             .ThrowAsync<HypothesisInvalidException<string>>();
 

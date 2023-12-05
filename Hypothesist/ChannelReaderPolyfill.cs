@@ -1,8 +1,5 @@
 ﻿#if !NETSTANDARD2_1_OR_GREATER
-using System.Collections.Generic;
 using System.Runtime.CompilerServices;
-using System.Threading;
-using System.Threading.Channels;
 
 namespace Hypothesist;
 

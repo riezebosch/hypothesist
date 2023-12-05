@@ -1,9 +1,3 @@
-using System.Threading.Tasks;
-using FluentAssertions;
-using FluentAssertions.Extensions;
-using Hypothesist.Tests.Helpers;
-using Xunit;
-
 namespace Hypothesist.Tests.Experiments;
 
 public class Any
