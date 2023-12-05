@@ -6,13 +6,8 @@ using Xunit;
 
 namespace Hypothesist.Rebus.Tests;
 
-public class AsHandlerTests : IClassFixture<RabbitMqContainer>
+public class AsHandlerTests(RabbitMqContainer container) : IClassFixture<RabbitMqContainer>
 {
-    private readonly RabbitMqContainer _container;
-
-    public AsHandlerTests(RabbitMqContainer container) => 
-        _container = container;
-
     [Fact]
     public async Task Test1()
     {
@@ -23,14 +18,14 @@ public class AsHandlerTests : IClassFixture<RabbitMqContainer>
             .Register(hypothesis.AsHandler);
 
         var bus = Configure.With(activator)
-            .Transport(t => t.UseRabbitMq(_container.ConnectionString, "consumer-queue"))
+            .Transport(t => t.UseRabbitMq(container.ConnectionString, "consumer-queue"))
             .Start();
 
         await bus
             .Subscribe<UserLoggedIn>();
 
         var producer = Configure.OneWayClient()
-            .Transport(t => t.UseRabbitMqAsOneWayClient(_container.ConnectionString))
+            .Transport(t => t.UseRabbitMqAsOneWayClient(container.ConnectionString))
             .Start();
         
         await producer

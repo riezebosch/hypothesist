@@ -1,6 +1,3 @@
-using System;
-using System.Threading.Tasks;
-
 namespace Hypothesist.Tests.Helpers;
 
 internal static class Test

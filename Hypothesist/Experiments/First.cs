@@ -1,23 +1,15 @@
-using System;
-using System.Linq;
-
 namespace Hypothesist.Experiments;
 
-public class First<T> : IExperiment<T>
+public class First<T>(Predicate<T> match) : IExperiment<T>
 {
-    private readonly Predicate<T> _match;
-
-    public First(Predicate<T> match) => 
-        _match = match;
-
     void IObserver<T>.OnCompleted() => 
-        throw new HypothesisInvalidException<T>("Expected first sample to match but none received", Enumerable.Empty<T>(), Enumerable.Empty<T>());
+        throw new HypothesisInvalidException<T>("Expected first sample to match but none received", Array.Empty<T>(), Array.Empty<T>());
 
     void IObserver<T>.OnNext(T value)
     {
-        if (!_match(value))
+        if (!match(value))
         {
-            throw new HypothesisInvalidException<T>("I expected the first sample to match, but it did not.", Enumerable.Empty<T>(),  new[] { value });
+            throw new HypothesisInvalidException<T>("I expected the first sample to match, but it did not.", Array.Empty<T>(),  new[] { value });
         }
 
         Done = true;

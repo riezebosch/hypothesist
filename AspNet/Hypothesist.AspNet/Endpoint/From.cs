@@ -1,16 +1,11 @@
-#if NET7_0
+#if NET7_0_OR_GREATER
 using Microsoft.AspNetCore.Http;
 
 namespace Hypothesist.AspNet.Endpoint;
 
-public class From<T>
+public class From<T>(IHypothesis<T> hypothesis)
 {
-    private readonly IHypothesis<T> _hypothesis;
-
-    public From(IHypothesis<T> hypothesis) => 
-        _hypothesis = hypothesis;
-
     public IEndpointFilter Select(Func<EndpointFilterInvocationContext, T> select) => 
-        new Select<T>(_hypothesis, select);
+        new Select<T>(hypothesis, select);
 }
 #endif

@@ -1,14 +1,10 @@
 namespace Hypothesist.AspNet;
 
-public class Test<T>
+public class Test<T>(IHypothesis<T> hypothesis)
 {
-    private readonly IHypothesis<T> _hypothesis;
+    public Request.From<T> FromRequest() => new(hypothesis);
 
-    public Test(IHypothesis<T> hypothesis) => _hypothesis = hypothesis;
-
-    public Request.From<T> FromRequest() => new(_hypothesis);
-
-    #if NET7_0
-    public Endpoint.From<T> FromEndpoint() => new(_hypothesis);
+    #if NET7_0_OR_GREATER
+    public Endpoint.From<T> FromEndpoint() => new(hypothesis);
     #endif
 }

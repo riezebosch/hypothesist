@@ -1,7 +1,3 @@
-using System.Linq;
-using FluentAssertions;
-using Xunit;
-
 namespace Hypothesist.Tests;
 
 public static class InvalidExceptionTests
@@ -32,8 +28,8 @@ public static class InvalidExceptionTests
     {
         var exception = new HypothesisInvalidException<string>(
             "expectations not met", 
-            Enumerable.Empty<string>(),
-            Enumerable.Empty<string>());
+            Array.Empty<string>(),
+            Array.Empty<string>());
 
         exception
             .Message
@@ -54,7 +50,7 @@ public static class InvalidExceptionTests
         var exception = new HypothesisInvalidException<string>(
             "expectations not met", 
             new []{ "1", null },
-            Enumerable.Empty<string>());
+            Array.Empty<string>());
 
         exception
             .Message
