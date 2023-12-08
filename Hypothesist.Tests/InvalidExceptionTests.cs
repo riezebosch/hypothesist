@@ -20,7 +20,7 @@ public static class InvalidExceptionTests
                 Unmatched:
                 * this is unmatched
 
-                """);
+                """.ReplaceLineEndings());
     }
     
     [Fact]
@@ -41,7 +41,7 @@ public static class InvalidExceptionTests
                 Unmatched:
                    <none>
 
-                """);
+                """.ReplaceLineEndings());
     }
     
     [Fact]
@@ -63,6 +63,6 @@ public static class InvalidExceptionTests
                 Unmatched:
                    <none>
 
-                """);
+                """.ReplaceLineEndings());
     }
 }
