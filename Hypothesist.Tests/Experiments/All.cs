@@ -40,7 +40,7 @@ public class All
                        * a
                        Unmatched:
                        * b
-                       """);
+                       """.ReplaceLineEndings());
 
         ex.Which
             .Matched
