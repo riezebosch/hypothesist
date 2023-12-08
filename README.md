@@ -134,3 +134,4 @@ Some adapters wrapping around the hypothesis to make invocation convenient:
 * [MassTransit](MassTransit)
 * [Azure ServiceBus](ServiceBus)
 * [ASPNET Core](AspNet)
+* [EntityFramework](EF)
