@@ -26,7 +26,7 @@ build_script:
 before_test:
   - pwsh: az login --service-principal --tenant 3d4d17ea-1ae4-4705-947e-51369c5a5f79 -u 84708c19-29bc-4fb2-aa5c-bda04d55c4e9 -p $env:SPN_TOKEN
 after_test:
-  - dotnet tool restore && dotnet stryker --reporter dots --reporter cleartext --since=main -c 4
+  - dotnet tool restore && dotnet stryker -f stryker-config.yaml --reporter dots --reporter cleartext --since:main -c 4
 test_script:
   - dotnet test -s test.runsettings
 environment:
