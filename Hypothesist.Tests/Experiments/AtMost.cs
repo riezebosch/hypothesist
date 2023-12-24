@@ -1,64 +1,61 @@
-using System.Diagnostics;
-
 namespace Hypothesist.Tests.Experiments;
 
-public static class AtLeast
+public static class AtMost
 {
     [Fact]
     public static async Task Valid()
     {
         var observer = Observer.For<string>();
-
         await observer.Add("a");
-        await observer.Add("a");
-            
-        var sw = Stopwatch.StartNew();
         await Hypothesis
             .On(observer)
-            .Timebox(20.Minutes())
-            .AtLeast(2)
-            .Match(x => x == "a")
-            .Validate();
-        
-        sw.Elapsed.Should().BeLessThan(1.Seconds());
-    }
-        
-    [Fact]
-    public static async Task None()
-    {
-        var observer = Observer.For<string>();
-        var act = () => Hypothesis
-            .On(observer)
             .Timebox(1.Seconds())
-            .AtLeast(2)
+            .AtMost(1)
             .Match("a")
             .Validate();
-        
-        await act.Should()
-            .ThrowAsync<HypothesisInvalidException<string>>()
-            .WithMessage("*at least 2*");
     }
         
     [Fact]
-    public static async Task Less()
+    public static Task None()
     {
         var observer = Observer.For<string>();
+        return Hypothesis
+            .On(observer)
+            .Timebox(1.Seconds())
+            .AtMost(2)
+            .Match("a")
+            .Validate();
+    }
+        
+    [Fact]
+    public static async Task More()
+    {
+        var observer = Observer.For<string>();
+
+        await observer.Add("b");
+        await observer.Add("a");
         await observer.Add("a");
             
         var act = () => Hypothesis
             .On(observer)
             .Timebox(1.Seconds())
-            .AtLeast(2)
+            .AtMost(1)
             .Match("a")
             .Validate();
         
         var ex = await act.Should()
-            .ThrowAsync<HypothesisInvalidException<string>>();
-
+            .ThrowAsync<HypothesisInvalidException<string>>()
+            .WithMessage("*at most 1*");
+        
         ex.Which
             .Matched
             .Should()
-            .BeEquivalentTo("a");
+            .BeEquivalentTo("a", "a");
+
+        ex.Which
+            .Unmatched
+            .Should()
+            .BeEquivalentTo("b");
     }
         
     [Fact]
@@ -66,20 +63,11 @@ public static class AtLeast
     {
         var observer = Observer.For<string>();
         await observer.Add("b");
-            
-        var act = () => Hypothesis
+        await Hypothesis
             .On(observer)
             .Timebox(1.Seconds())
-            .AtLeast(2)
+            .AtMost(0)
             .Match("a")
             .Validate();
-        
-        var ex = await act.Should()
-            .ThrowAsync<HypothesisInvalidException<string>>();
-
-        ex.Which
-            .Unmatched
-            .Should()
-            .BeEquivalentTo("b");
     }
 }

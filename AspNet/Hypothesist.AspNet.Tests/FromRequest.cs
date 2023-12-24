@@ -17,64 +17,67 @@ public class FromRequest
     public async Task Select()
     {
         var input = Guid.NewGuid();
-        var hypothesis = Hypothesis
-            .For<Guid>()
-            .Any(s => s == input);
+        var observer = Observer.For<Guid>();
 
         await using var app = Setup(_url);
-        app.Use(hypothesis
-            .Test()
+        app.Use(observer
             .FromRequest()
             .Select(request => Guid.Parse(request.Query["data"]!)));
         
         await app.StartAsync();
         await Test(_url, input);
 
-        await hypothesis
-            .Validate(3.Seconds());
+        await Hypothesis
+            .On(observer)
+            .Timebox(3.Seconds())
+            .Any()
+            .Match(input)
+            .Validate();
     }
     
     [Fact]
     public async Task UseWhen()
     {
         var input = Guid.NewGuid();
-        var hypothesis = Hypothesis
-            .For<Guid>()
-            .Any(s => s == input);
+        var observer = Observer.For<Guid>();
 
         await using var app = Setup(_url);
         app.UseWhen(context => context.Request.Path == "/hello", then => then
-            .Use(hypothesis
-                .Test()
+            .Use(observer
                 .FromRequest()
                 .Select(request => Guid.Parse(request.Query["data"]!))));
     
         await app.StartAsync();
         await Test(_url, input);
 
-        await hypothesis
-            .Validate(3.Seconds());
+        await Hypothesis
+            .On(observer)
+            .Timebox(3.Seconds())
+            .Any()
+            .Match(input)
+            .Validate();
     }
     
     [Fact]
     public async Task Body()
     {
         var input = Guid.NewGuid();
-        var hypothesis = Hypothesis
-            .For<Guid>()
-            .Any(s => s == input);
+        var observer = Observer.For<Guid>();
 
         await using var app = Setup(_url);
-        app.Use(hypothesis
-            .Test()
+        app.Use(observer
             .FromRequest()
             .Body(stream => JsonSerializer.DeserializeAsync<Guid>(stream)));
         
         await app.StartAsync();
         await Test(_url, input);
 
-        await hypothesis
-            .Validate(3.Seconds());
+        await Hypothesis
+            .On(observer)
+            .Timebox(3.Seconds())
+            .Any()
+            .Match(input)
+            .Validate();
     }
 
     private static WebApplication Setup(Uri url)

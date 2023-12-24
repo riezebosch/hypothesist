@@ -11,11 +11,9 @@ public class AsHandlerTests(RabbitMqContainer container) : IClassFixture<RabbitM
     [Fact]
     public async Task Test1()
     {
-        var hypothesis = Hypothesis.For<UserLoggedIn>()
-            .Any(x => x.Id == 1234);
-        
+        var observer = Observer.For<UserLoggedIn>();
         using var activator = new BuiltinHandlerActivator()
-            .Register(hypothesis.AsHandler);
+            .Register(observer.AsHandler);
 
         var bus = Configure.With(activator)
             .Transport(t => t.UseRabbitMq(container.ConnectionString, "consumer-queue"))
@@ -31,8 +29,12 @@ public class AsHandlerTests(RabbitMqContainer container) : IClassFixture<RabbitM
         await producer
             .Publish(new UserLoggedIn(1234));
 
-        await hypothesis
-            .Validate(2.Seconds());
+        await Hypothesis
+            .On(observer)
+            .Timebox(2.Seconds())
+            .Any()
+            .Match(new UserLoggedIn(1234))
+            .Validate();
     }
 
     private record UserLoggedIn(int Id);

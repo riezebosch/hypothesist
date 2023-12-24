@@ -12,10 +12,7 @@ public class ReceiverTests
     public async Task Cancelled()
     {
         // Arrange
-        var hypothesis = Hypothesis
-            .For<ServiceBusReceivedMessage>()
-            .Any();
-        
+        var observer = Observer.For<ServiceBusReceivedMessage>();
         var receiver = Substitute.For<ServiceBusReceiver>();
         receiver
             .ReceiveMessageAsync(Arg.Any<TimeSpan?>(), Arg.Any<CancellationToken>())
@@ -29,7 +26,7 @@ public class ReceiverTests
         var token = new CancellationTokenSource(10);
         
         // Act
-        var act = () => receiver.Test(hypothesis, token: token.Token);
+        var act = () => observer.For(receiver, token: token.Token);
         
         // Assert
         await act.Should().ThrowAsync<TaskCanceledException>();

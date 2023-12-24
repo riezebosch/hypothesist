@@ -5,4 +5,3 @@ global using FluentAssertions;
 global using FluentAssertions.Extensions;
 global using Hypothesist.Tests.Helpers;
 global using Xunit;
-

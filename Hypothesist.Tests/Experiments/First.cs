@@ -3,23 +3,28 @@ namespace Hypothesist.Tests.Experiments;
 public class First
 {
     [Fact]
-    public async Task Valid()
+    public Task Valid()
     {
-        var hypothesis = Hypothesis
-            .For<string>()
-            .First(x => x == "a");
-
-        await Task.WhenAll(hypothesis.Test("a"), hypothesis.Validate(1.Seconds()));
+        var observer = Observer.For<string>();
+        return Task.WhenAll(observer.Add("a"),
+            Hypothesis
+                .On(observer)
+                .Timebox(12.Seconds())
+                .First()
+                .Match("a")
+                .Validate());
     }
-        
+
     [Fact]
     public async Task None()
     {
-        var hypothesis = Hypothesis
-            .For<string>()
-            .First(_ => true);
-
-        var act = () => hypothesis.Validate(1.Seconds());
+        var observer = Observer.For<string>();
+        var act = () => Hypothesis
+            .On(observer)
+            .Timebox(1.Seconds())
+            .First()
+            .Match()
+            .Validate();
         await act
             .Should()
             .ThrowAsync<HypothesisInvalidException<string>>()
@@ -29,14 +34,18 @@ public class First
     [Fact]
     public async Task Invalid()
     {
-        var hypothesis = Hypothesis
-            .For<string>()
-            .First(y => y == "a");
+        var observer = Observer.For<string>();
+
+        await observer.Add("b");
+        await observer.Add("a");
             
-        await hypothesis.Test("b");
-        await hypothesis.Test("a");
-            
-        var act = () => hypothesis.Validate(1.Seconds());
+        var act = () => Hypothesis
+            .On(observer)
+            .Timebox(1.Seconds())
+            .First()
+            .Match("a")
+            .Validate();
+        
         var ex = await act
             .Should()
             .ThrowAsync<HypothesisInvalidException<string>>()

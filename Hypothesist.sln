@@ -21,12 +21,18 @@ ProjectSection(SolutionItems) = preProject
 EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Rebus", "Rebus", "{14EFFA4C-635E-4701-AAAA-908610AF2182}"
+	ProjectSection(SolutionItems) = preProject
+		Rebus\README.md = Rebus\README.md
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hypothesist.Rebus", "Rebus\Hypothesist.Rebus\Hypothesist.Rebus.csproj", "{9DE22007-A50E-420F-8829-17F686A93E5F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hypothesist.Rebus.Tests", "Rebus\Hypothesist.Rebus.Tests\Hypothesist.Rebus.Tests.csproj", "{8F633B83-F93A-4670-9E5F-18DA8253111D}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ServiceBus", "ServiceBus", "{E19BE636-E9C1-490B-AD97-948918C340D4}"
+	ProjectSection(SolutionItems) = preProject
+		ServiceBus\README.md = ServiceBus\README.md
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hypothesist.ServiceBus", "ServiceBus\Hypothesist.ServiceBus\Hypothesist.ServiceBus.csproj", "{7B7BDF17-9457-4889-B7DA-37CF6E9B81EA}"
 EndProject

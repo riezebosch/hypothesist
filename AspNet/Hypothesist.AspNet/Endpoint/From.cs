@@ -3,9 +3,9 @@ using Microsoft.AspNetCore.Http;
 
 namespace Hypothesist.AspNet.Endpoint;
 
-public class From<T>(IHypothesis<T> hypothesis)
+public class From<T>(Observer<T> observer)
 {
-    public IEndpointFilter Select(Func<EndpointFilterInvocationContext, T> select) => 
-        new Select<T>(hypothesis, select);
+    public IEndpointFilter With(Func<EndpointFilterInvocationContext, T> select) => 
+        new With<T>(observer, select);
 }
 #endif

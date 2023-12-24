@@ -7,10 +7,8 @@ Use [Hypothesist](https://nuget.org/packages/hypothesist) to validate received m
 ## Arrange
 
 ```c#
-var message = new Message(1234); // <-- records are awesome!
-var hypothesis = Hypothesis
-    .For<Message>()
-    .Any(x => x == message);
+var expected = new Message(1234); // <-- records are awesome!
+var observer = Observer.For<Message>();
 ```
 
 ```c#
@@ -19,7 +17,7 @@ var bus = Bus.Factory
     {
         cfg.ReceiveEndpoint("...", e =>
         {
-            e.Consumer(hypothesis.AsConsumer);
+            e.Consumer(observer.AsConsumer);
         });
     });
 await bus.StartAsync();
@@ -35,5 +33,10 @@ await endpoint.Send(message);
 ## Assert
 
 ```c#
-await hypothesis.Validate(10.Seconds());
+await hypothesis
+    .On(observer)
+    .Timebox(10.Seconds())
+    .Any()
+    .Match(expected)
+    .Validate();
 ```

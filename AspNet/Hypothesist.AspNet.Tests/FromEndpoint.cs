@@ -16,42 +16,40 @@ public class FromEndpoint
     public async Task Select()
     {
         var input = Guid.NewGuid();
-        var hypothesis = Hypothesis
-            .For<Guid>()
-            .Any(s => s == input);
+        var observer = Observer.For<Guid>();
 
         var builder = WebApplication.CreateBuilder(new[] { $"--urls={_url}" });
         await using var app = builder.Build();
         app.UseDeveloperExceptionPage();
-        
         app.MapPost("/hello", ([FromBody]Guid body) => Results.Ok(body))
-            .AddEndpointFilter(hypothesis
-                .Test()
+            .AddEndpointFilter(observer
                 .FromEndpoint()
-                .Select(context => context.GetArgument<Guid>(0)));
+                .With(context => context.GetArgument<Guid>(0)));
         
         await app.StartAsync();
         _ = await _url.AppendPathSegment("hello").PostJsonAsync(input);
 
-        await hypothesis.Validate(3.Seconds());
+        await Hypothesis
+            .On(observer)
+            .Timebox(3.Seconds())
+            .Any()
+            .Match(input)
+            .Validate();
     }
     
     [Fact]
     public async Task When()
     {
-        var hypothesis = Hypothesis
-            .For<int>()
-            .Any();
+        var observer = Observer.For<int>();
 
         var builder = WebApplication.CreateBuilder(new[] { $"--urls={_url}" });
         await using var app = builder.Build();
         app.UseDeveloperExceptionPage();
 
         var group = app.MapGroup("")
-            .AddEndpointFilter(hypothesis
-                .Test()
+            .AddEndpointFilter(observer
                 .FromEndpoint()
-                .Select(context => context.GetArgument<int>(0))
+                .With(context => context.GetArgument<int>(0))
                 .When(context => context.HttpContext.Request.Path == "/a"));
         
         group.MapPost("/a", ([FromBody]int body) => Results.Ok());
@@ -61,6 +59,11 @@ public class FromEndpoint
         _ = await _url.AppendPathSegment("a").PostJsonAsync(10);
         _ = await _url.AppendPathSegment("b").PostJsonAsync(Guid.NewGuid());
 
-        await hypothesis.Validate(3.Seconds());
+        await Hypothesis
+            .On(observer)
+            .Timebox(3.Seconds())
+            .Any()
+            .Match(10)
+            .Validate();
     }
 }
