@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using Azure.Messaging.ServiceBus;
 using FluentAssertions;
 using FluentAssertions.Extensions;
@@ -20,10 +21,11 @@ public class ReceiverTests
             .ReceiveMessageAsync(Arg.Any<TimeSpan?>(), Arg.Any<CancellationToken>())
             .Returns(async info =>
             {
-                await Task.Delay(5.Minutes(), info.Arg<CancellationToken>());
+                await Task.Delay(1.Minutes(), info.Arg<CancellationToken>());
                 return null;
             });
 
+        var sw = Stopwatch.StartNew();
         var token = new CancellationTokenSource(10);
         
         // Act
@@ -31,5 +33,6 @@ public class ReceiverTests
         
         // Assert
         await act.Should().ThrowAsync<TaskCanceledException>();
+        sw.Elapsed.Should().BeLessThan(1.Seconds());
     }
 }
