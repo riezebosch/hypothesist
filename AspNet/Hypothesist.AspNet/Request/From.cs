@@ -2,19 +2,19 @@ using Microsoft.AspNetCore.Http;
 
 namespace Hypothesist.AspNet.Request;
 
-public class From<T>(IHypothesis<T> hypothesis)
+public class From<T>(Observer<T> observer)
 {
     public Func<HttpContext, RequestDelegate, Task> Select(Func<HttpRequest, T> select) =>
         async (context, next) =>
         {
-            await hypothesis.Test(select(context.Request));
+            await observer.Add(select(context.Request));
             await next(context);
         };
 
     public Func<HttpContext, RequestDelegate, Task> Body(Func<Stream, ValueTask<T>> body) =>
         async (context, next) =>
         {
-            await hypothesis.Test(await Stream(context.Request, body));
+            await observer.Add(await Stream(context.Request, body));
             await next(context);
         };
 

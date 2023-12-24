@@ -10,63 +10,67 @@
 This library is there to help you do assertions on events that are about to happen in the near future.
 For example, when building integration tests for a subscriber on a service bus.
 
+## v3
+
+See the [docs](docs/v3.md) for the changed API since `v3`.
+
+## Rx
+
+See some notes on using [`System.Linq.Async` and `FluentAssertions`](docs/rx.md).
+
+## Usage
+
 ![schema](https://raw.githubusercontent.com/riezebosch/hypothesist/main/docs/img/hypothesize.svg)
 
 ### Define
 
-Define your hypothesis with an _experiment_, _time constraint_ and then _test_ with samples:
+Define your hypothesis with an _observer_, an _experiment_, an a _time constraint_. Feed the _observer_ with
+samples and validate the hypothesis:
 
 ```c#
-var hypothesis = Hypothesis
-    .For<Data>()
-    .Any(x => x.Value == 1234);
+var observer = new Observer<int>();
 ```
 
 ### Test
 
-You _test_ your _hypothesis_ by providing samples:
+You feed the observer with data:
 
 ```c#
-await hypothesis.Test(sample);
+await observer.Observe(3);
 ```
 
 For example with an injected stub:
 
 ```c#
-var service = Substitute.For<IDemoService>();
+var service = Substitute.For<SomeInjectable>();
 service
-    .When(x => x.Demo(Arg.Any<Data>()))
-    .Do(x => hypothesis.Test(x.Arg<Data>()));
+    .When(x => x.Demo(Arg.Any<int>()))
+    .Do(x => observer.Observe(x.Arg<int>()));
 ```
 
 or with a hand-rolled implementation:
 
 ```c#
-class TestService : IDemoService
+class TestAdapter(Observer<int> observer) : SomeInjectable
 {
-    private readonly IHypothesis<Data> _hypothesis;
-
-    public TestService(IHypothesis<Data> hypothesis) => 
-        _hypothesis = hypothesis;
-
-    public Task Demo(Data data) =>
-        _hypothesis.Test(data);
+    public Task Demo(int data) =>
+        observer.Observe(data);
 }
 
-var service = new TestService(hypothesis);
+var service = new TestAdapter(observer);
 ```
 
 or with the consumer factory [Hypothesist.MassTransit](MassTransit) when using [MassTransit](https://masstransit-project.com):
 
 ```c#
-cfg.ReceiveEndpoint("...", x => x.Consumer(hypothesis.AsConsumer));
+cfg.ReceiveEndpoint("...", x => x.Consumer(observer.AsConsumer));
 ```
 
 or with the handler factory [Hypothesist.Rebus](Rebus) when using [Rebus](https://github.com/rebus-org/):
 
 ```c#
 using var activator = new BuiltinHandlerActivator()
-    .Register(hypothesis.AsHandler);
+    .Register(observer.AsHandler);
 ```
 
 Just checkout the available [adapters](#adapters) for more information!
@@ -76,7 +80,12 @@ Just checkout the available [adapters](#adapters) for more information!
 You _validate_ if your _hypothesis_ holds true for the supplied _samples_ during the specified _time window_.
 
 ```c#
-await hypothesis.Validate(15.Seconds()); // <-- using TimeSpan extension from FluentAssertions
+await hypothesis
+    .On(observer)
+    .Timebox(1.Seconds());
+    .Any()
+    .Match(1234)
+    .Validate();
 ```
 
 But somewhere in between you've fired off the eventing mechanism that ultimately invokes the injected service.
@@ -112,6 +121,10 @@ Validates that _exactly_ the given number of _occurrences_ is observed that matc
 ### AtLeast
 
 Validates that _at least_ the given number of _occurrences_ is observed that matches the assertion.
+
+### AtMost
+
+Validates that _at most_ the given number of _occurrences_ is observed that matches the assertion.
 
 ## Adapters
 

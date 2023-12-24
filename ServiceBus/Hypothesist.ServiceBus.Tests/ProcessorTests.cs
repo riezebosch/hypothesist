@@ -11,10 +11,7 @@ public class ProcessorTests
     public async Task Cancelled()
     {
         // Arrange
-        var hypothesis = Hypothesis
-            .For<ServiceBusReceivedMessage>()
-            .Any();
-        
+        var observer = Observer.For<ServiceBusReceivedMessage>();
         var receiver = Substitute.For<ServiceBusProcessor>();
         receiver
             .StartProcessingAsync(Arg.Any<CancellationToken>())
@@ -23,7 +20,7 @@ public class ProcessorTests
         var token = new CancellationTokenSource(10);
         
         // Act
-        var act = () => receiver.Test(hypothesis, token.Token);
+        var act = () => observer.For(receiver, token.Token);
         
         // Assert
         await act.Should().ThrowAsync<TaskCanceledException>();

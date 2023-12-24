@@ -5,13 +5,13 @@ namespace Hypothesist;
 
 public static class Factory
 {
-    public static IConsumer<T> AsConsumer<T>(this IHypothesis<T> hypothesis) where T : class =>
-        new Consumer<T>(hypothesis);
+    public static IConsumer<T> AsConsumer<T>(this Observer<T> observer) where T : class =>
+        new Consumer<T>(observer);
 
-    private class Consumer<T>(IHypothesis<T> hypothesis) : IConsumer<T>
+    private class Consumer<T>(Observer<T> observer) : IConsumer<T>
         where T : class
     {
         public Task Consume(ConsumeContext<T> context) =>
-            hypothesis.Test(context.Message);
+            observer.Add(context.Message);
     }
 }

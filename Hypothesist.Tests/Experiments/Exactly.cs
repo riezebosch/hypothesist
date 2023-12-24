@@ -5,25 +5,29 @@ public static class Exactly
     [Fact]
     public static async Task Valid()
     {
-        var hypothesis = Hypothesis
-            .For<string>()
-            .Exactly(2, x => x == "a");
+        var observer = Observer.For<string>();
 
-        await hypothesis.Test("a");
-        await hypothesis.Test("a");
+        await observer.Add("a");
+        await observer.Add("a");
             
-        await hypothesis
-            .Validate(2.Seconds());
+        await Hypothesis
+            .On(observer)
+            .Timebox(1.Seconds())
+            .Exactly(2)
+            .Match("a")
+            .Validate();
     }
         
     [Fact]
     public static async Task None()
     {
-        var hypothesis = Hypothesis
-            .For<string>()
-            .Exactly(2, x => x == "a");
-
-        var act = () => hypothesis.Validate(1.Seconds());
+        var observer = Observer.For<string>();
+        var act = () => Hypothesis
+            .On(observer)
+            .Timebox(1.Seconds())
+            .Exactly(2)
+            .Match("a")
+            .Validate();
         await act.Should()
             .ThrowAsync<HypothesisInvalidException<string>>()
             .WithMessage("*exactly*");
@@ -32,13 +36,16 @@ public static class Exactly
     [Fact]
     public static async Task Less()
     {
-        var hypothesis = Hypothesis
-            .For<string>()
-            .Exactly(2, x => x == "a");
+        var observer = Observer.For<string>();
+        await observer.Add("a");
             
-        await hypothesis.Test("a");
-            
-        var act = () => hypothesis.Validate(1.Seconds());
+        var act = () => Hypothesis
+            .On(observer)
+            .Timebox(1.Seconds())
+            .Exactly(2)
+            .Match("a")
+            .Validate();
+        
         var ex = await act.Should()
             .ThrowAsync<HypothesisInvalidException<string>>();
 
@@ -51,15 +58,19 @@ public static class Exactly
     [Fact]
     public static async Task More()
     {
-        var hypothesis = Hypothesis
-            .For<string>()
-            .Exactly(2, x => x == "a");
+        var observer = Observer.For<string>();
+
+        await observer.Add("a");
+        await observer.Add("a");
+        await observer.Add("a");
             
-        await hypothesis.Test("a");
-        await hypothesis.Test("a");
-        await hypothesis.Test("a");
-            
-        var act = () => hypothesis.Validate(1.Seconds());
+        var act = () => Hypothesis
+            .On(observer)
+            .Timebox(1.Seconds())
+            .Exactly(2)
+            .Match("a")
+            .Validate();
+        
         var ex = await act.Should()
             .ThrowAsync<HypothesisInvalidException<string>>();
 
@@ -72,13 +83,16 @@ public static class Exactly
     [Fact]
     public static async Task Unmatched()
     {
-        var hypothesis = Hypothesis
-            .For<string>()
-            .Exactly(2, x => x == "a");
+        var observer = Observer.For<string>();
+        await observer.Add("b");
             
-        await hypothesis.Test("b");
-            
-        var act = () => hypothesis.Validate(1.Seconds());
+        var act = () => Hypothesis
+            .On(observer)
+            .Timebox(1.Seconds())
+            .Exactly(2)
+            .Match("a")
+            .Validate();
+        
         var ex = await act.Should()
             .ThrowAsync<HypothesisInvalidException<string>>();
 

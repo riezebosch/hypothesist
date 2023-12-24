@@ -1,37 +1,44 @@
-using System.Diagnostics;
-
 namespace Hypothesist.Tests.Experiments;
 
 public class All
 {
     [Fact]
-    public async Task Empty() => 
-        await Hypothesis
-            .For<string>()
-            .All(x => x == "a")
-            .Validate(1.Seconds());
+    public Task Empty() => 
+        Hypothesis
+            .On(Observer.For<string>())
+            .Timebox(1.Seconds())
+            .All()
+            .Match()
+            .Validate();
         
     [Fact]
-    public async Task Valid()
+    public Task Valid()
     {
+        var observer = Observer.For<string>();
         var hypothesis = Hypothesis
-            .For<string>()
-            .All(x => x == "a");
+            .On(observer)
+            .Timebox(1.Seconds())
+            .All()
+            .Match("a");
 
-        await Task.WhenAll(hypothesis.Test("a"), hypothesis.Validate(1.Seconds()));
+        return Task.WhenAll(observer.Add("a"), hypothesis.Validate());
     }
 
     [Fact]
     public async Task Invalid()
     {
-        var hypothesis = Hypothesis
-            .For<string>()
-            .All(y => y == "a");
+        var observer = Observer.For<string>();
 
-        await hypothesis.Test("a");
-        await hypothesis.Test("b");
+        await observer.Add("a");
+        await observer.Add("b");
             
-        var act = () => hypothesis.Validate(1.Seconds());
+        var act = () => Hypothesis
+            .On(observer)
+            .Timebox(1.Seconds())
+            .All()
+            .Match(s => s == "a")
+            .Validate();
+        
         var ex = await act
             .Should()
             .ThrowAsync<HypothesisInvalidException<string>>();
@@ -58,14 +65,18 @@ public class All
     [Fact]
     public async Task Next()
     {
-        var hypothesis = Hypothesis
-            .For<string>()
-            .All(y => y == "a");
-            
-        await hypothesis.Test("a");
-        await hypothesis.Test("b");
+        var observer = Observer.For<string>();
 
-        var act = () => hypothesis.Validate(1.Seconds());
+        await observer.Add("a");
+        await observer.Add("b");
+
+        var act = () => Hypothesis
+            .On(observer)
+            .Timebox(1.Seconds())
+            .All()
+            .Match("a")
+            .Validate();
+        
         var ex = await act
             .Should()
             .ThrowAsync<HypothesisInvalidException<string>>();
@@ -79,34 +90,5 @@ public class All
             .Unmatched
             .Should()
             .BeEquivalentTo("b");
-    }
-        
-    [Fact]
-    public async Task Sliding()
-    {
-        var hypothesis = Hypothesis
-            .For<string>()
-            .All(y => y == "a");
-
-        var act = () => Task.WhenAll(
-            hypothesis.TestSlowly("a", "a", "a", "a", "b"), 
-            hypothesis.Validate(2.Seconds()));
-        await act
-            .Should()
-            .ThrowAsync<HypothesisInvalidException<string>>();
-    }
-        
-    [Fact]
-    public async Task Cancel()
-    {
-        using var tcs = new CancellationTokenSource(2.Seconds());
-        var hypothesis = Hypothesis
-            .For<string>()
-            .All(_ => true);
-
-        var sw = Stopwatch.StartNew();
-        await hypothesis.Validate(1.Minutes(), tcs.Token);
-        
-        sw.Elapsed.Should().BeLessThan(5.Seconds());
     }
 }

@@ -1,45 +1,32 @@
-using System.Diagnostics;
-
 namespace Hypothesist.Tests.Experiments;
 
 public class Any
 {
     [Fact]
-    public async Task Valid()
+    public Task Valid()
     {
-        var hypothesis = Hypothesis
-            .For<string>()
-            .Any(x => x == "a");
-
-        await Task.WhenAll(hypothesis.Test("a"), hypothesis.Validate(1.Seconds()));
-    }
-        
-    [Fact]
-    public async Task Anything()
-    {
-        var hypothesis = Hypothesis
-            .For<string>()
-            .Any();
-
-        var sw = Stopwatch.StartNew();
-        await Task.WhenAll(
-            hypothesis.Test("a"),
-            hypothesis.Validate(1.Minutes()));
-
-        sw.Elapsed.Should().BeLessThan(1.Seconds());
+        var observer = Observer.For<string>();
+        return Task.WhenAll(observer.Add("a"), Hypothesis
+            .On(observer)
+            .Timebox(1.Seconds())
+            .Any()
+            .Match(x => x == "a")
+            .Validate());
     }
         
     [Fact]
     public async Task Invalid()
     {
-        var hypothesis = Hypothesis
-            .For<string>()
-            .Any(x => x == "a");
+        var observer = Observer.For<string>();
+        await observer
+            .Add("b");
 
-        await hypothesis
-            .Test("b");
-
-        var act = () => hypothesis.Validate(1.Seconds());
+        var act = () => Hypothesis
+            .On(observer)
+            .Timebox(1.Seconds())
+            .Any()
+            .Match("a")
+            .Validate();
         var ex = await act
             .Should()
             .ThrowAsync<HypothesisInvalidException<string>>();
@@ -51,25 +38,18 @@ public class Any
     }
         
     [Fact]
-    public async Task Sliding()
-    {
-        var hypothesis = Hypothesis
-            .For<string>()
-            .Any(y => y == "b");
-            
-        await Task.WhenAll(hypothesis.TestSlowly("a", "a", "a", "a", "b"), hypothesis.Validate(2.Seconds()));
-    }
-        
-    [Fact]
     public async Task Next()
     {
-        var hypothesis = Hypothesis
-            .For<string>()
-            .Any(y => y == "b");
+        var observer = Observer.For<string>();
 
-        await hypothesis.Test("a");
-        await hypothesis.Test("b");
+        await observer.Add("a");
+        await observer.Add("b");
 
-        await hypothesis.Validate(1.Seconds());
+        await Hypothesis
+            .On(observer)
+            .Timebox(1.Seconds())
+            .Any()
+            .Match("b")
+            .Validate();
     }
 }

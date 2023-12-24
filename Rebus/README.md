@@ -7,15 +7,13 @@ Use [Hypothesist](https://nuget.org/packages/hypothesist) to validate received m
 ## Arrange
 
 ```c#
-var message = new Message(1234); // <-- records are awesome!
-var hypothesis = Hypothesis
-    .For<Message>()
-    .Any(x => x == message);
+var expected = new Message(1234);
+var observer = new Observer<Message>();
 ```
 
 ```c#
 using var activator = new BuiltinHandlerActivator()
-    .Register(hypothesis.AsHandler); // <-- here's the magic
+    .Register(observer.AsHandler); // <-- here's the magic
 
 var bus = Configure.With(activator)
     .Transport(t => t.UseRabbitMq("...")
@@ -33,8 +31,12 @@ await bus.Publish(new Message(1234)); // <-- from the system under test
 ## Assert
 
 ```c#
-await hypothesis
-    .Validate(2.Seconds());
+await Hypothesis
+    .On(observer)
+    .Timebox(2.Seconds())
+    .Any()
+    .Match(expected)
+    .Validate();
 ```
 
-Slightly more convenient then the inline handler method: `activator.Handle<Message>(m => hypothesis.Test(m))`.
+Slightly more convenient then the inline handler method: `activator.Handle<Message>(m => observer.Observe(m))`.

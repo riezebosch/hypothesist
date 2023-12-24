@@ -1,57 +1,32 @@
+using Hypothesist.Builders;
 using Hypothesist.Experiments;
 
 namespace Hypothesist;
 
 public static class Hypothesis
 {
-    public static IHypothesis<T> For<T>() =>
-        new Hypothesis<T>();
-    public static IHypothesis<T> Any<T>(this IHypothesis<T> hypothesis, Predicate<T> match) =>
-        hypothesis.Add(new AtLeast<T>(match, 1));
-    public static IHypothesis<T> All<T>(this IHypothesis<T> hypothesis, Predicate<T> match) =>
-        hypothesis.Add(new All<T>(match));
-    public static IHypothesis<T> First<T>(this IHypothesis<T> hypothesis, Predicate<T> match) =>
-        hypothesis.Add(new First<T>(match));
-    public static IHypothesis<T> Single<T>(this IHypothesis<T> hypothesis, Predicate<T> match) =>
-        hypothesis.Add(new Exactly<T>(match, 1));
-    public static IHypothesis<T> Exactly<T>(this IHypothesis<T> hypothesis, int occurrences, Predicate<T> match) =>
-        hypothesis.Add(new Exactly<T>(match, occurrences));
-    public static IHypothesis<T> AtLeast<T>(this IHypothesis<T> hypothesis, int occurrences, Predicate<T> match) =>
-        hypothesis.Add(new AtLeast<T>(match, occurrences));
-    public static IHypothesis<T> Any<T>(this IHypothesis<T> hypothesis) =>
-        hypothesis.Any(_ => true);
+    public static On<T> On<T>(IAsyncEnumerable<T> observer) => new(observer);
+
+    /// <summary>
+    /// Use <see cref="Observer{T}"/> and <see cref="On{T}"/> instead.
+    /// </summary>
+    [Obsolete("Use Observer.For<T>() and Hypothesis.On(observer).")]
+    public static Old.For<T> For<T>() => new();
 }
 
-internal class Hypothesis<T> : IHypothesis<T>
+public class Hypothesis<T>(IAsyncEnumerable<T> observer, IExperiment<T> experiment)
 {
-    private readonly Channel<T> _channel = Channel.CreateUnbounded<T>();
-    private readonly List<IExperiment<T>> _experiments = new();
-
-    async Task IHypothesis<T>.Validate(TimeSpan period, CancellationToken token)
+    public async Task Validate(CancellationToken token = default)
     {
-        try
+        await foreach (var sample in observer.WithCancellation(token))
         {
-            await foreach (var sample in _channel.Reader.ReadAllAsync(token).Sliding(period, token))
+            experiment.OnNext(sample);
+            if (experiment.Done)
             {
-                _experiments.ForEach(x => x.OnNext(sample));
-                if (_experiments.All(x => x.Done))
-                {
-                    break;
-                }
+                break;
             }
         }
-        catch (OperationCanceledException)
-        {
-            _experiments.ForEach(x => x.OnCompleted());
-        }
-    }
 
-    async Task IHypothesis<T>.Test(T sample, CancellationToken token) =>
-        await _channel.Writer.WriteAsync(sample, token);
-
-    public IHypothesis<T> Add(IExperiment<T> observer)
-    {
-        _experiments.Add(observer);
-        return this;
+        experiment.OnCompleted();
     }
 }

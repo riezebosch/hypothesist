@@ -19,14 +19,16 @@ public class Test : IAsyncLifetime
         await sender.SendMessageAsync(new ServiceBusMessage("data"));
         
         // Act
-        var hypothesis = Hypothesis
-            .For<ServiceBusReceivedMessage>()
-            .Any(m => m.Body.ToString() == "data");
-
-        await using var processor = await client.CreateProcessor(_queue).Test(hypothesis);
+        var observer = Observer.For<ServiceBusReceivedMessage>();
+        await using var processor = await observer.For(client.CreateProcessor(_queue));
         
         // Assert
-        await hypothesis.Validate(10.Seconds());
+        await Hypothesis
+            .On(observer)
+            .Timebox(10.Seconds())
+            .Any()
+            .Match(m => m.Body.ToString() == "data")
+            .Validate();
     }
     
     [Fact]
@@ -38,14 +40,16 @@ public class Test : IAsyncLifetime
         await sender.SendMessageAsync(new ServiceBusMessage("data"));
         
         // Act
-        var hypothesis = Hypothesis
-            .For<ServiceBusReceivedMessage>()
-            .Any(m => m.Body.ToString() == "data");
-
-        await using var receiver = await client.CreateReceiver(_queue).Test(hypothesis);
+        var observer = Observer.For<ServiceBusReceivedMessage>();
+        await using var receiver = await observer.For(client.CreateReceiver(_queue));
         
         // Assert
-        await hypothesis.Validate(30.Seconds());
+        await Hypothesis
+            .On(observer)
+            .Timebox(30.Seconds())
+            .Any()
+            .Match(m => m.Body.ToString() == "data")
+            .Validate();
     }
 
     async Task IAsyncLifetime.InitializeAsync()

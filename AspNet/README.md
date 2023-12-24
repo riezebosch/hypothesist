@@ -9,9 +9,7 @@ Use [Hypothesist](https://nuget.org/packages/hypothesist) to validate received r
 Define the hypothesis:
 
 ```c#
-var hypothesis = Hypothesis
-    .For<string>()
-    .Any(x => x == "some-data");
+var observer = Observer.For<string>();
 ```
 
 Insert the middleware to test from incoming requests:
@@ -21,17 +19,15 @@ var builder = WebApplication.CreateBuilder(args);
 
 await using var app = builder.Build();
 app.MapGet("/hello", (string data) => Results.Ok());
-app.Use(hypothesis
-    .Test()
+app.Use(observer
     .FromRequest()
-    .Select(request => request.Query["data"]!));
+    .With(request => request.Query["data"]!));
 ```
 
 or read from the body:
 
 ```csharp
-app.Use(hypothesis
-    .Test()
+app.Use(observer
     .FromRequest()
     .Body(body => JsonSerializer.DeserializeAsync<Guid>(body)));
 ```
@@ -43,20 +39,18 @@ Only test for a specific route:
 
 ```csharp
 app.UseWhen(context => context.Request.Path == "/hello", then => then
-    .Use(hypothesis
-        .Test()
+    .Use(observer
         .FromRequest()
-        .Select(request => request.Query["data"]!)));
+        .With(request => request.Query["data"]!)));
 ```
 
 or directly test from an [endpoint filter](https://learn.microsoft.com/en-us/aspnet/core/fundamentals/minimal-apis/min-api-filters?view=aspnetcore-7.0):
 
 ```csharp
 app.MapPost("/hello", ([FromBody]Guid body) => Results.Ok(body))
-    .AddEndpointFilter(hypothesis
-        .Test()
+    .AddEndpointFilter(observer
         .FromEndpoint()
-        .Select(context => context.GetArgument<Guid>(0)));
+        .With(context => context.GetArgument<Guid>(0)));
 ```
 
 ## Act
@@ -70,6 +64,10 @@ curl 'http://localhost:1234/hello?data=some-input'
 ## Assert
 
 ```c#
-await hypothesis
-    .Validate(2.Seconds());
+await Hypothesis
+    .On(observer)
+    .Timebox(2.Seconds());
+    .Any()
+    .Match("some-data")
+    .Validate();
 ```

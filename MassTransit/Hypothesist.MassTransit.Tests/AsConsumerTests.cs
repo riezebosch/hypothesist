@@ -12,9 +12,8 @@ public class AsConsumerTests
     public async Task ConsumerTestsHypothesis()
     {
         // Arrange
-        var hypothesis = Hypothesis.For<UserLoggedIn>()
-            .Any(x => x == new UserLoggedIn(3));
-        var consumer = hypothesis
+        var observer = Observer.For<UserLoggedIn>();
+        var consumer = observer
             .AsConsumer();
 
         var context = Substitute.For<ConsumeContext<UserLoggedIn>>();
@@ -24,7 +23,11 @@ public class AsConsumerTests
         await consumer.Consume(context);
             
         // Assert
-        await hypothesis.Validate(2.Seconds());
+        await Hypothesis.On(observer)
+            .Timebox(2.Seconds())
+            .Any()
+            .Match(new UserLoggedIn(3))
+            .Validate();
     }
 
     public record UserLoggedIn(int Id);
