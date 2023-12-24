@@ -1,3 +1,5 @@
+using System.Diagnostics;
+
 namespace Hypothesist.Tests.Experiments;
 
 public class All
@@ -97,11 +99,14 @@ public class All
     [Fact]
     public async Task Cancel()
     {
-        using var tcs = new CancellationTokenSource(5.Seconds());
+        using var tcs = new CancellationTokenSource(2.Seconds());
         var hypothesis = Hypothesis
             .For<string>()
             .All(_ => true);
 
-        await hypothesis.Validate(20.Minutes(), tcs.Token);
+        var sw = Stopwatch.StartNew();
+        await hypothesis.Validate(1.Minutes(), tcs.Token);
+        
+        sw.Elapsed.Should().BeLessThan(5.Seconds());
     }
 }

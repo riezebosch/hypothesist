@@ -1,3 +1,5 @@
+using System.Diagnostics;
+
 namespace Hypothesist.Tests.Experiments;
 
 public class Any
@@ -19,9 +21,12 @@ public class Any
             .For<string>()
             .Any();
 
+        var sw = Stopwatch.StartNew();
         await Task.WhenAll(
             hypothesis.Test("a"),
-            hypothesis.Validate(10.Minutes()));
+            hypothesis.Validate(1.Minutes()));
+
+        sw.Elapsed.Should().BeLessThan(1.Seconds());
     }
         
     [Fact]

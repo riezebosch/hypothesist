@@ -1,3 +1,5 @@
+using System.Diagnostics;
+
 namespace Hypothesist.Tests.Experiments;
 
 public static class AtLeast
@@ -11,9 +13,12 @@ public static class AtLeast
 
         await hypothesis.Test("a");
         await hypothesis.Test("a");
-            
+
+        var sw = Stopwatch.StartNew();
         await hypothesis
-            .Validate(20.Minutes());
+            .Validate(1.Minutes());
+        
+        sw.Elapsed.Should().BeLessThan(1.Seconds());
     }
         
     [Fact]
