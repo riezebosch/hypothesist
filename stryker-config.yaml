@@ -1,6 +1,0 @@
-stryker-config:
-  project-info:
-    name: github.com/riezebosch/hypothesist
-    version: main
-  language-version: preview
-  target-framework: net7.0

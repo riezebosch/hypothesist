@@ -1,0 +1,41 @@
+{
+  "stryker-config": {
+    "project-info": {
+      "name": "github.com/riezebosch/hypothesist"
+    },
+    "concurrency": 6,
+    "mutation-level": "Standard",
+    "language-version": "preview",
+    "additional-timeout": 1000,
+    "mutate": [
+      "**/*"
+    ],
+    "solution": "Hypothesist.sln",
+    "target-framework": "net7.0",
+    "coverage-analysis": "perTest",
+    "disable-bail": false,
+    "disable-mix-mutants": false,
+    "thresholds": {
+      "high": 98,
+      "low": 98,
+      "break": 98
+    },
+    "verbosity": "info",
+    "reporters": [
+      "Progress",
+      "Html"
+    ],
+    "since": {
+      "enabled": true,
+      "ignore-changes-in": ["*.csproj", "*.yaml", "*.md", "*.sln"],
+      "target": "main"
+    },
+    "dashboard-url": "https://dashboard.stryker-mutator.io",
+    "test-projects": [],
+    "test-case-filter": "",
+    "ignore-mutations": [],
+    "ignore-methods": [],
+    "report-file-name": "mutation-report",
+    "break-on-initial-test-failure": true
+  }
+}
