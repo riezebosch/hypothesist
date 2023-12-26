@@ -30,7 +30,7 @@ build_script:
 before_test:
   - az login --service-principal --tenant 3d4d17ea-1ae4-4705-947e-51369c5a5f79 -u 84708c19-29bc-4fb2-aa5c-bda04d55c4e9 -p $SPN_TOKEN
 after_test:
-  - dotnet tool restore && dotnet stryker -f stryker-config.yaml --reporter dots --reporter cleartext --since:main -c 4
+  - dotnet tool restore && dotnet stryker --reporter dots --reporter cleartext
 test_script:
   - dotnet test -s test.runsettings
 environment:
@@ -40,14 +40,13 @@ for:
   - branches:
       only:
         - main
-        - stryker
     environment:
       CODECOV_TOKEN: 82855860-51e6-44b7-a0e4-75f725a6a7be
       STRYKER_DASHBOARD_API_KEY:
         secure: zNvmKO5DpbfDRV+WFnyaetwbAexTXGi4rMSwJH9NnTtOS3SDAUjD8CIVGRsReMRf
     after_test:
       - curl -Os https://uploader.codecov.io/latest/linux/codecov && chmod +x codecov && ./codecov -t ${CODECOV_TOKEN} -f **/*.cobertura.xml
-      - dotnet tool restore && dotnet stryker -f stryker-config.yaml --reporter dots --reporter dashboard --dashboard-api-key $STRYKER_DASHBOARD_API_KEY -c 4
+      - dotnet tool restore && dotnet stryker --reporter dots --reporter dashboard --dashboard-api-key $STRYKER_DASHBOARD_API_KEY
     deploy:
       - provider: NuGet
         api_key:
