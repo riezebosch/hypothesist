@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <RunSettings>
     <DataCollectionRunSettings>
         <DataCollectors>
@@ -9,6 +10,9 @@
                             <Include>
                                 <Source>Hypothesist.*</Source>
                             </Include>
+                            <Exclude>
+                                <Source>.*</Source>
+                            </Exclude>
                         </Sources>
                     </CodeCoverage>
                 </Configuration>
