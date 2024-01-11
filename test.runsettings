@@ -6,14 +6,11 @@
                 <Configuration>
                     <Format>Cobertura</Format>
                     <CodeCoverage>
-                        <Sources>
+                        <ModulePaths>
                             <Include>
-                                <Source>Hypothesist.*</Source>
+                                <ModulePath>.*Hypothesist.[a-zA-Z.]*dll$</ModulePath>
                             </Include>
-                            <Exclude>
-                                <Source>.*</Source>
-                            </Exclude>
-                        </Sources>
+                        </ModulePaths>
                     </CodeCoverage>
                 </Configuration>
             </DataCollector>
