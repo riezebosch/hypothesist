@@ -19,7 +19,7 @@
         <Authors>Manuel Riezebosch</Authors>
         <NeutralLanguage>en-US</NeutralLanguage>
         <Description>Plugin the hypothesis as a handler into Rebus to validate message arrival.</Description>
-        <PackageReleaseNotes>🤟</PackageReleaseNotes>
+        <PackageReleaseNotes>v3 API change: https://github.com/riezebosch/hypothesist/blob/main/docs/v3.md</PackageReleaseNotes>
         <PackageReadmeFile>README.md</PackageReadmeFile>
         <PackageTags>test;assert;hypothesis;future;async;asynchronous;event;driven;architecture;eda;thread;synchronization;rebus</PackageTags>
         <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>

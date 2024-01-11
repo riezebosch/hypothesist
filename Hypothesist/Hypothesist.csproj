@@ -11,7 +11,7 @@
         <NeutralLanguage>en-US</NeutralLanguage>
         <AssemblyTitle>Hypothesist</AssemblyTitle>
         <Description>Define and validate hypothesis on future events.</Description>
-        <PackageReleaseNotes>🤟</PackageReleaseNotes>
+        <PackageReleaseNotes>v3 API change: https://github.com/riezebosch/hypothesist/blob/main/docs/v3.md</PackageReleaseNotes>
         <PackageReadmeFile>README.md</PackageReadmeFile>
         <PackageTags>test;assert;hypothesis;future;async;asynchronous;event;driven;architecture;eda;thread;synchronization</PackageTags>
         <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
