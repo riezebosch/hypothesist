@@ -25,8 +25,6 @@ before_build:
     rm packages-microsoft-prod.deb
     sudo apt update
     sudo apt install dotnet-sdk-8.0 -y
-build_script:
-  - dotnet build -c Release
 before_test:
   - az login --service-principal --tenant 3d4d17ea-1ae4-4705-947e-51369c5a5f79 -u 84708c19-29bc-4fb2-aa5c-bda04d55c4e9 -p $SPN_TOKEN
 after_test:
@@ -51,5 +49,3 @@ for:
       - provider: NuGet
         api_key:
           secure: pZYKB9EWhp9ykhnd75dMBbnc96Ti/F3pWYyRVj/toW7HDNBCl2zd7Fnw+/JNDtyV
-        on:
-          branch: main
