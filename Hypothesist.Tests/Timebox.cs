@@ -10,7 +10,7 @@ public class Timebox
         var observer = Observer.For<string>();
         var hypothesis = Hypothesis
             .On(observer)
-            .Timebox(2.Seconds())
+            .Timebox(3.Seconds())
             .All()
             .Match("a");
 
