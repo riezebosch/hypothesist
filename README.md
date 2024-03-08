@@ -28,7 +28,7 @@ Define your hypothesis with an _observer_, an _experiment_, an a _time constrain
 samples and validate the hypothesis:
 
 ```c#
-var observer = new Observer<int>();
+var observer = Observer.For<int>();
 ```
 
 ### Test
@@ -36,7 +36,7 @@ var observer = new Observer<int>();
 You feed the observer with data:
 
 ```c#
-await observer.Observe(3);
+await observer.Add(3);
 ```
 
 For example with an injected stub:
@@ -45,7 +45,7 @@ For example with an injected stub:
 var service = Substitute.For<SomeInjectable>();
 service
     .When(x => x.Demo(Arg.Any<int>()))
-    .Do(x => observer.Observe(x.Arg<int>()));
+    .Do(x => observer.Add(x.Arg<int>()));
 ```
 
 or with a hand-rolled implementation:
@@ -54,7 +54,7 @@ or with a hand-rolled implementation:
 class TestAdapter(Observer<int> observer) : SomeInjectable
 {
     public Task Demo(int data) =>
-        observer.Observe(data);
+        observer.Add(data);
 }
 
 var service = new TestAdapter(observer);

@@ -24,4 +24,4 @@ from this library.
 
 Although this approach works fine, you lack the context you are used to when using
 `FluentAssertions`. That additional context of items that didn't match is provided
-when using the `Hypothesis.For()` validation. 
+when using the `Hypothesis.On()` for validation. 
