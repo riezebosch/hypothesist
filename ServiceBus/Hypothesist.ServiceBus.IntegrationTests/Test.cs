@@ -1,26 +1,21 @@
-using Azure.Identity;
 using Azure.Messaging.ServiceBus;
-using Azure.Messaging.ServiceBus.Administration;
 using FluentAssertions.Extensions;
 
 namespace Hypothesist.ServiceBus.IntegrationTests;
 
-public class Test : IAsyncLifetime
+public class Test : IClassFixture<Fixture>
 {
-    private readonly string _queue = Guid.NewGuid().ToString("N");
-    private const string ConnectionString = "sbmanuel.servicebus.windows.net";
-
     [Fact]
     public async Task Processor()
     {
         // Arrange
-        await using var client = new ServiceBusClient(ConnectionString, new DefaultAzureCredential());
-        await using var sender = client.CreateSender(_queue);
+        await using var client = new ServiceBusClient("Endpoint=sb://localhost;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=SAS_KEY_VALUE;UseDevelopmentEmulator=true;");
+        await using var sender = client.CreateSender("queue.1");
         await sender.SendMessageAsync(new ServiceBusMessage("data"));
         
         // Act
         var observer = Observer.For<ServiceBusReceivedMessage>();
-        await using var processor = await observer.For(client.CreateProcessor(_queue));
+        await using var processor = await observer.For(client.CreateProcessor("queue.1"));
         
         // Assert
         await Hypothesis
@@ -35,13 +30,13 @@ public class Test : IAsyncLifetime
     public async Task Receiver()
     {
         // Arrange
-        await using var client = new ServiceBusClient(ConnectionString, new DefaultAzureCredential());
-        await using var sender = client.CreateSender(_queue);
+        await using var client = new ServiceBusClient("Endpoint=sb://localhost;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=SAS_KEY_VALUE;UseDevelopmentEmulator=true;");
+        await using var sender = client.CreateSender("queue.1");
         await sender.SendMessageAsync(new ServiceBusMessage("data"));
         
         // Act
         var observer = Observer.For<ServiceBusReceivedMessage>();
-        await using var receiver = await observer.For(client.CreateReceiver(_queue));
+        await using var receiver = await observer.For(client.CreateReceiver("queue.1"));
         
         // Assert
         await Hypothesis
@@ -50,19 +45,5 @@ public class Test : IAsyncLifetime
             .Any()
             .Match(m => m.Body.ToString() == "data")
             .Validate();
-    }
-
-    async Task IAsyncLifetime.InitializeAsync()
-    {
-        var admin = new ServiceBusAdministrationClient(ConnectionString, new DefaultAzureCredential());
-        await admin.CreateQueueAsync(_queue);
-    }
-
-    Task IAsyncLifetime.DisposeAsync()
-    {
-        var admin = new ServiceBusAdministrationClient(ConnectionString, new DefaultAzureCredential());
-        admin.DeleteQueueAsync(_queue); // don't wait for it to complete
-
-        return Task.CompletedTask;
     }
 }

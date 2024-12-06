@@ -25,15 +25,10 @@ before_build:
     rm packages-microsoft-prod.deb
     sudo apt update
     sudo apt install dotnet-sdk-8.0 -y
-before_test:
-  - az login --service-principal --tenant 3d4d17ea-1ae4-4705-947e-51369c5a5f79 -u 84708c19-29bc-4fb2-aa5c-bda04d55c4e9 -p $SPN_TOKEN
 after_test:
   - dotnet tool restore && dotnet stryker --reporter dots --reporter cleartext
 test_script:
   - dotnet test -s test.runsettings
-environment:
-  SPN_TOKEN:
-    secure: oVYrJIQj+NpNgiX9jS4ynUZp7U7FZIj26zy5B8PcbjOhpkGPsJceEIeJewUdcAHY
 for:
   - branches:
       only:
