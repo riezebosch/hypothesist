@@ -1,15 +1,20 @@
 using Azure.Messaging.ServiceBus;
 using FluentAssertions.Extensions;
+using Testcontainers.ServiceBus;
 
 namespace Hypothesist.ServiceBus.IntegrationTests;
 
-public class Test : IClassFixture<Fixture>
+public class Test : IAsyncLifetime
 {
+    private readonly ServiceBusContainer _bus = new ServiceBusBuilder()
+        .WithAcceptLicenseAgreement(true)
+        .Build();
+    
     [Fact]
     public async Task Processor()
     {
         // Arrange
-        await using var client = new ServiceBusClient("Endpoint=sb://localhost;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=SAS_KEY_VALUE;UseDevelopmentEmulator=true;");
+        await using var client = new ServiceBusClient(_bus.GetConnectionString());
         await using var sender = client.CreateSender("queue.1");
         await sender.SendMessageAsync(new ServiceBusMessage("data"));
         
@@ -30,7 +35,7 @@ public class Test : IClassFixture<Fixture>
     public async Task Receiver()
     {
         // Arrange
-        await using var client = new ServiceBusClient("Endpoint=sb://localhost;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=SAS_KEY_VALUE;UseDevelopmentEmulator=true;");
+        await using var client = new ServiceBusClient(_bus.GetConnectionString());
         await using var sender = client.CreateSender("queue.1");
         await sender.SendMessageAsync(new ServiceBusMessage("data"));
         
@@ -46,4 +51,8 @@ public class Test : IClassFixture<Fixture>
             .Match(m => m.Body.ToString() == "data")
             .Validate();
     }
+
+    Task IAsyncLifetime.InitializeAsync() => _bus.StartAsync();
+
+    Task IAsyncLifetime.DisposeAsync() => _bus.DisposeAsync().AsTask();
 }
